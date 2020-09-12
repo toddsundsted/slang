@@ -16,6 +16,7 @@ module Slang
       end
 
       def to_s(str, buffer_name)
+        str << "#{buffer_name} << \" \"\n" if prepend_whitespace
         str << "#{buffer_name} << \"<#{name}\"\n"
         str << "#{buffer_name} << \" id=\\\"#{id}\\\"\"\n" if id
         c_names = generate_class_names
@@ -45,6 +46,7 @@ module Slang
         if !self_closing?
           str << "#{buffer_name} << \"</#{name}>\"\n"
         end
+        str << "#{buffer_name} << \" \"\n" if append_whitespace
       end
 
       def only_inline_children?

@@ -81,6 +81,12 @@ module Slang
         when '#'
           next_char # skip the '#' at the beginning
           consume_element_id
+        when '<'
+          @token.prepend_whitespace = true
+          next_char
+        when '>'
+          @token.append_whitespace = true
+          next_char
         when ' ', '[', '(', '{'
           close_char = ATTR_OPEN_CLOSE_MAP[current_char]
           open_char = current_char

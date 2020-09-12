@@ -284,4 +284,14 @@ describe Slang do
       HTML
     end
   end
+
+  describe "trailing and leading whitespace" do
+    it "renders trailing and leading whitespace" do
+      res = render_file "spec/fixtures/whitespace.slang"
+
+      res.should eq <<-HTML
+      <div><span>1</span> <span>2</span> <span>3</span></div>
+      HTML
+    end
+  end
 end
