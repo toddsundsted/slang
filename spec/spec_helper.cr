@@ -14,3 +14,15 @@ macro render(slang)
     \{{ run("./support/process", {{slang}}, "__str__") }}
   end
 end
+
+def evaluates_to_true
+  1 == 1
+end
+
+def evaluates_to_false
+  1 == 2
+end
+
+def evaluates_to_hello
+  "hello"
+end
