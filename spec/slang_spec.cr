@@ -206,14 +206,11 @@ describe Slang do
   describe "raw text" do
     it "renders javascript" do
       res = render_file "spec/fixtures/script.slang"
+
       res.should eq <<-HTML
-      <script src="https://somecdn/vue.min.js"></script>
-      <script>
+      <script src="https://somecdn/vue.min.js"></script><script>
         var num = 8*3;
-        console.log(num);
-      </script>
-      <script>var num = 8*4;</script>
-      <script>
+        console.log(num);</script><script>var num = 8*4;</script><script>
         new Vue({
           el: '#app',
           template: `
@@ -221,20 +218,19 @@ describe Slang do
               something
             </div>
           `
-        })
-      </script>
+        })</script>
       HTML
     end
+
     it "renders stylesheets" do
       res = render_file "spec/fixtures/style.slang"
+
       res.should eq <<-HTML
       <style>
         h1 {color:red;}
         p {
           color:blue;
-        }
-      </style>
-      <style>h2 {color:green;}</style>
+        }</style><style>h2 {color:green;}</style>
       HTML
     end
   end

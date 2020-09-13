@@ -7,7 +7,7 @@ module Slang
       :attributes,
       :id
 
-    property :value, :escaped, :inline, :visible, :conditional, :prepend_whitespace, :append_whitespace
+    property :value, :escaped, :inline, :visible, :conditional, :prepend_whitespace, :append_whitespace, :raw_text
 
     @value : String?
     @id : String?
@@ -25,6 +25,7 @@ module Slang
       @attributes["class"] = Set(String).new
       @prepend_whitespace = false
       @append_whitespace = false
+      @raw_text = false
     end
 
     def add_attribute(name, value, interpolate)

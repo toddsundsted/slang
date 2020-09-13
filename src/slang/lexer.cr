@@ -56,6 +56,7 @@ module Slang
         end
       end
 
+      @token.raw_text = (@raw_text_column > 0)
       @token.inline = inline unless @raw_text_column > 0
       @last_token = @token
       @token
