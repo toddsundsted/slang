@@ -208,10 +208,8 @@ describe Slang do
       res = render_file "spec/fixtures/script.slang"
 
       res.should eq <<-HTML
-      <script src="https://somecdn/vue.min.js"></script><script>
-        var num = 8*3;
-        console.log(num);</script><script>var num = 8*4;</script><script>
-        new Vue({
+      <script src="https://somecdn/vue.min.js"></script><script>  var num = 8*3;
+        console.log(num);</script><script>var num = 8*4;</script><script>  new Vue({
           el: '#app',
           template: `
             <div>
@@ -226,8 +224,7 @@ describe Slang do
       res = render_file "spec/fixtures/style.slang"
 
       res.should eq <<-HTML
-      <style>
-        h1 {color:red;}
+      <style>  h1 {color:red;}
         p {
           color:blue;
         }</style><style>h2 {color:green;}</style>

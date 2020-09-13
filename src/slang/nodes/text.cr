@@ -7,8 +7,12 @@ module Slang
         parent.allow_children_to_escape?
       end
 
+      def first_child?
+        parent.nodes.first? == self && parent.token.type == :ELEMENT
+      end
+
       def to_s(str, buffer_name)
-        str << "#{buffer_name} << \"\n\"\n" if raw_text
+        str << "#{buffer_name} << \"\n\"\n" if raw_text && !first_child?
         str << "#{buffer_name} << \"#{indentation}\"\n" if indent? && raw_text
         str << "#{buffer_name} << "
 
