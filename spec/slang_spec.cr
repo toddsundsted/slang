@@ -324,4 +324,18 @@ describe Slang do
       HTML
     end
   end
+
+  describe "multiline text" do
+    it "renders multiline verbatim text" do
+      res = render_file "spec/fixtures/multiline.slang"
+
+      res.should eq <<-HTML
+      Line one.
+      Line two.
+        <img>Line three.
+      Line four.
+        <br> <div></div>
+      HTML
+    end
+  end
 end

@@ -43,7 +43,9 @@ module Slang
         consume_output
       when '|', '\''
         @token.escaped = false
-        consume_text
+        @token.text_block = true
+        text = consume_text
+        @raw_text_column = (@column_number - text.size) + 2 # +2 for the quotation marks
       when '<'
         @token.escaped = false
         consume_html
@@ -244,10 +246,10 @@ module Slang
 
     private def consume_text
       @token.type = :TEXT
-      append_whitespace = current_char == '\''
+      @token.append_whitespace = current_char == '\''
       next_char if current_char == '|' || current_char == '\''
       skip_whitespace
-      @token.value = "\"#{consume_text_line.strip}#{append_whitespace ? " " : ""}\""
+      @token.value = "\"#{consume_text_line.strip}\""
     end
 
     private def consume_text_line

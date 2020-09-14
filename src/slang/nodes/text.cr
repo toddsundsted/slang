@@ -8,11 +8,16 @@ module Slang
       end
 
       def first_child?
-        parent.nodes.first? == self && parent.token.type == :ELEMENT
+        parent.nodes.first == self && (parent.is_a?(Element) || parent.is_a?(Document))
+      end
+
+      def empty_parent?
+        parent.value =~ /^"\s*"$/ && parent.text_block
       end
 
       def to_s(str, buffer_name)
-        str << "#{buffer_name} << \"\n\"\n" if raw_text && !first_child?
+        str << "#{buffer_name} << \" \"\n" if prepend_whitespace
+        str << "#{buffer_name} << \"\n\"\n" if raw_text && !first_child? && !text_block && !empty_parent?
         str << "#{buffer_name} << \"#{indentation[2..-1]}\"\n" if indent? && raw_text
         str << "#{buffer_name} << "
 
@@ -44,6 +49,7 @@ module Slang
             node.to_s(str, buffer_name)
           end
         end
+        str << "#{buffer_name} << \" \"\n" if append_whitespace
       end
     end
   end
