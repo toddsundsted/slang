@@ -68,20 +68,33 @@ describe Slang do
 
   describe "attributes" do
     it "accepts string values" do
-      render("span attr=\"hello\"").should eq <<-HTML
+      render(%{span attr="hello"}).should eq <<-HTML
       <span attr="hello"></span>
       HTML
     end
 
     it "accepts spaces in attribute string values" do
-      render("span attr=\"hello world\"").should eq <<-HTML
+      render(%{span attr="hello world"}).should eq <<-HTML
       <span attr="hello world"></span>
       HTML
     end
+
     it "allows dynamic classname" do
       klass = "my-class"
       render("span class=klass Foo").should eq <<-HTML
       <span class="my-class">Foo</span>
+      HTML
+    end
+
+    it "allows complex expressions" do
+      render(%{span class=String.interpolation('f', "oo")}).should eq <<-HTML
+      <span class="foo"></span>
+      HTML
+    end
+
+    it "allows complex expressions" do
+      render(%{span class=("f" + "oo")}).should eq <<-HTML
+      <span class="foo"></span>
       HTML
     end
 

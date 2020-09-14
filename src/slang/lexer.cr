@@ -395,6 +395,7 @@ module Slang
             end
           when ' '
             break if open_count == 0
+            break unless is_in_parenthesis
             str << current_char
             next_char
           when open_char
@@ -406,6 +407,16 @@ module Slang
             next if close_char == ' '
             break if open_count == 0
             open_count -= 1
+            str << current_char
+            next_char
+          when '('
+            open_count += 1
+            is_in_parenthesis = true
+            str << current_char
+            next_char
+          when ')'
+            open_count -= 1
+            is_in_parenthesis = false
             str << current_char
             next_char
           when '\n', '\0'
