@@ -8,4 +8,3 @@ div
   span #{%["hello #{"world"}"]}
   span #{%{"hello #{"world"}"}}
   span #{%<"hello #{"world"}">}
-  span #{%<"hello#{'"'}>} "world"

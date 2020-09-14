@@ -42,14 +42,16 @@ module Slang
       when '='
         consume_output
       when '|', '\''
+        @token.escaped = false
         consume_text
       when '<'
+        @token.escaped = false
         consume_html
-        @token.escaped = true if inline
       when '/'
         consume_comment
       else
         if inline
+          @token.escaped = false
           consume_text
         else
           unexpected_char

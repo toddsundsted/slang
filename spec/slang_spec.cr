@@ -137,21 +137,45 @@ describe Slang do
       HTML
     end
 
-    it "escapes html" do
-      render("div <ah>").should eq <<-HTML
-      <div>&lt;ah&gt;</div>
-      HTML
-    end
-
     it "escapes html with =" do
-      render("div = \"<ah>\"").should eq <<-HTML
+      render(%{div = "<ah>"}).should eq <<-HTML
       <div>&lt;ah&gt;</div>
       HTML
     end
 
-    it "does not escapes html with ==" do
-      render("div == \"<ah>\"").should eq <<-HTML
+    it "does not escape html with ==" do
+      render(%{div == "<ah>"}).should eq <<-HTML
       <div><ah></div>
+      HTML
+    end
+
+    it "does not escape html" do
+      render(%{div <ah>}).should eq <<-HTML
+      <div><ah></div>
+      HTML
+    end
+
+    it "does not escape html" do
+      render(%{div\n  <ah>}).should eq <<-HTML
+      <div><ah></div>
+      HTML
+    end
+
+    it "does not escape text" do
+      render(%{| <ah>}).should eq <<-HTML
+      <ah>
+      HTML
+    end
+
+    it "does not escape text" do
+      render(%{|\n  <ah>}).should eq <<-HTML
+      <ah>
+      HTML
+    end
+
+    it "does not escape quotes" do
+      render(%{div "ah"}).should eq <<-HTML
+      <div>"ah"</div>
       HTML
     end
   end
@@ -201,7 +225,7 @@ describe Slang do
       res = render_file "spec/fixtures/double-quotes.slang"
 
       res.should eq <<-HTML
-      <div><span>&quot;hello&quot;</span><span>&quot;hello&quot; world</span><span>&quot;hello&quot; &quot;world&quot;</span><span>&quot;hello world&quot;</span><span>&quot;hello world&quot;</span><span>&quot;hello world&quot;</span><span>&quot;hello world&quot;</span><span>&quot;hello world&quot;</span><span>&quot;hello world&quot;</span><span>&quot;hello&quot; &quot;world&quot;</span></div>
+      <div><span>"hello"</span><span>"hello" world</span><span>"hello" "world"</span><span>"hello world"</span><span>"hello world"</span><span>"hello world"</span><span>&quot;hello world&quot;</span><span>&quot;hello world&quot;</span><span>&quot;hello world&quot;</span></div>
       HTML
     end
   end
