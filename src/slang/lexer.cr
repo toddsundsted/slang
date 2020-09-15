@@ -13,7 +13,17 @@ module Slang
     end
 
     def next_token
+      loop do
+        next_token_internal
+        break unless @token.type == :NEWLINE
+      end
+      @last_token = @token
+      @token
+    end
+
+    private def next_token_internal
       skip_whitespace
+
       @token = Token.new
       @token.line_number = @line_number
       @token.column_number = @column_number
@@ -62,8 +72,6 @@ module Slang
 
       @token.raw_text = (@raw_text_column > 0)
       @token.inline = inline unless @raw_text_column > 0
-      @last_token = @token
-      @token
     end
 
     ATTR_OPEN_CLOSE_MAP = {

@@ -16,8 +16,6 @@ module Slang
           case token.type
           when :EOF
             break
-          when :NEWLINE
-            next_token
           when :DOCTYPE
             @document.nodes << Nodes::Doctype.new(@document, token)
             next_token
