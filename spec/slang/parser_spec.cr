@@ -24,6 +24,23 @@ describe Slang::Parser do
         {Slang::Nodes::Text, 3, 4, %["}"], 0}
       ])
     end
+
+    it "renders the template code" do
+      parser.parse.should eq <<-BLOCK
+      __slang__ << "<script"
+      __slang__ << ">"
+      __slang__ << ""
+      __slang__ << ("if (x) {").to_s(__slang__)
+      __slang__ << "\n"
+      __slang__ << "  "
+      __slang__ << ("x;").to_s(__slang__)
+      __slang__ << "\n"
+      __slang__ << ""
+      __slang__ << ("}").to_s(__slang__)
+      __slang__ << "</script>"
+
+      BLOCK
+    end
   end
 
   describe "css blocks" do
@@ -38,6 +55,23 @@ describe Slang::Parser do
         {Slang::Nodes::Text, 5, 3, %["display: none;"], 0},
         {Slang::Nodes::Text, 3, 4, %["}"], 0}
       ])
+    end
+
+    it "renders the template code" do
+      parser.parse.should eq <<-BLOCK
+      __slang__ << "<style"
+      __slang__ << ">"
+      __slang__ << ""
+      __slang__ << ("p {").to_s(__slang__)
+      __slang__ << "\n"
+      __slang__ << "  "
+      __slang__ << ("display: none;").to_s(__slang__)
+      __slang__ << "\n"
+      __slang__ << ""
+      __slang__ << ("}").to_s(__slang__)
+      __slang__ << "</style>"
+
+      BLOCK
     end
   end
 
@@ -54,6 +88,19 @@ describe Slang::Parser do
           {Slang::Nodes::Text, 5, 3, %["Third line."], 0}
         ])
       end
+
+      it "renders the template code" do
+        parser.parse.should eq <<-BLOCK
+        __slang__ << ("First line.").to_s(__slang__)
+        __slang__ << "\n"
+        __slang__ << ""
+        __slang__ << ("Second line.").to_s(__slang__)
+        __slang__ << "\n"
+        __slang__ << "  "
+        __slang__ << ("Third line.").to_s(__slang__)
+
+        BLOCK
+      end
     end
 
     context "with a quote" do
@@ -67,6 +114,20 @@ describe Slang::Parser do
           {Slang::Nodes::Text, 3, 2, %["Second line."], 1},
           {Slang::Nodes::Text, 5, 3, %["Third line."], 0}
         ])
+      end
+
+      it "renders the template code" do
+        parser.parse.should eq <<-BLOCK
+        __slang__ << ("First line.").to_s(__slang__)
+        __slang__ << "\n"
+        __slang__ << ""
+        __slang__ << ("Second line.").to_s(__slang__)
+        __slang__ << "\n"
+        __slang__ << "  "
+        __slang__ << ("Third line.").to_s(__slang__)
+        __slang__ << " "
+
+        BLOCK
       end
     end
   end

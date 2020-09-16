@@ -4,7 +4,7 @@ module Slang
   module Nodes
     class Text < Node
       def allow_children_to_escape?
-        parent.allow_children_to_escape?
+        parent.allow_children_to_escape? && !text_block
       end
 
       def first_child?
