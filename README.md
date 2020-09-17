@@ -1,6 +1,6 @@
 # Slang [![Build Status](https://travis-ci.org/jeromegn/slang.svg?branch=master)](https://travis-ci.org/jeromegn/slang)
 
-Lightweight, terse, templating language for Crystal.
+Lightweight, terse, templating language for Crystal. Now with more [Slim](https://github.com/slim-template/slim) compatibility.
 
 ## Installation
 
@@ -9,7 +9,8 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   slang:
-    github: jeromegn/slang
+    github: toddsundsted/slang
+    branch: master
 ```
 
 ## Usage
@@ -21,6 +22,9 @@ dependencies:
 Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
+  slang:
+    github: toddsundsted/slang
+    branch: master
   kilt:
     github: jeromegn/kilt
 ```
@@ -180,7 +184,7 @@ Compiles to HTML:
 
 ## Contributing
 
-1. Fork it ( https://github.com/jeromegn/slang/fork )
+1. Fork it ( https://github.com/toddsundsted/slang/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
