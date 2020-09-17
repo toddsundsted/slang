@@ -5,7 +5,6 @@ module Slang
 
       def to_s(str, buffer_name)
         if visible
-          str << "#{buffer_name} << \"\n\"\n" unless str.empty?
           str << "#{buffer_name} << \"#{indentation}\"\n" if indent?
           str << "#{buffer_name} << \"<!--\"\n"
           str << "#{buffer_name} << \"[#{conditional}]>\"\n" if conditional?
