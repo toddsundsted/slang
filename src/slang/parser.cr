@@ -2,9 +2,9 @@ module Slang
   class Parser
     @current_node : Node
 
-    def initialize(string)
+    def initialize(string, filename : String? = nil)
       @lexer = Lexer.new(string)
-      @document = Document.new
+      @document = Document.new(filename)
       @current_node = @document
       @control_nodes_per_column = {} of Int32 => Nodes::Control
       next_token

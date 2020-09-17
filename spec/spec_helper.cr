@@ -1,6 +1,7 @@
 require "spec"
 require "../src/slang"
 
+require "./support/content_for_view"
 require "./support/form_view"
 
 macro render_file(filename)

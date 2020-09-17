@@ -309,6 +309,12 @@ describe Slang do
       <form><input type="text" name="hello" \\><input type="submit"></form>
       HTML
     end
+
+    it "renders content_for" do
+      ContentForView.new.to_s.should eq <<-HTML
+      <link rel="stylesheet"><script type="text/javascript"></script>
+      HTML
+    end
   end
 
   describe "boolean attributes" do

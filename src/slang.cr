@@ -13,8 +13,8 @@ module Slang
   extend self
   DEFAULT_BUFFER_NAME = "__slang__"
 
-  def process_string(slang, filename = "dummy.slang", buffer_name = DEFAULT_BUFFER_NAME)
-    Slang::Parser.new(slang).parse(buffer_name)
+  def process_string(slang, filename = "slang_#{Random.new.next_int.abs}", buffer_name = DEFAULT_BUFFER_NAME)
+    Slang::Parser.new(slang, filename).parse(buffer_name)
   end
 
   def process_file(filename, buffer_name = DEFAULT_BUFFER_NAME)
