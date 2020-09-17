@@ -1,6 +1,6 @@
 private def render(node, str)
   if (value = node.value) && !value.empty?
-    str << node.indentation[2..-1] if node.indent?
+    str << node.indentation if node.indent?
     value.gsub(/\\(.)/, "\\1")[1..-2].to_s(str)
     str << "\n"
   end

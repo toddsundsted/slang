@@ -29,13 +29,11 @@ describe Slang::Parser do
       parser.parse.should eq <<-BLOCK
       __slang__ << "<script"
       __slang__ << ">"
-      __slang__ << ""
       __slang__ << ("if (x) {").to_s(__slang__)
       __slang__ << "\n"
       __slang__ << "  "
       __slang__ << ("x;").to_s(__slang__)
       __slang__ << "\n"
-      __slang__ << ""
       __slang__ << ("}").to_s(__slang__)
       __slang__ << "</script>"
 
@@ -61,13 +59,11 @@ describe Slang::Parser do
       parser.parse.should eq <<-BLOCK
       __slang__ << "<style"
       __slang__ << ">"
-      __slang__ << ""
       __slang__ << ("p {").to_s(__slang__)
       __slang__ << "\n"
       __slang__ << "  "
       __slang__ << ("display: none;").to_s(__slang__)
       __slang__ << "\n"
-      __slang__ << ""
       __slang__ << ("}").to_s(__slang__)
       __slang__ << "</style>"
 
@@ -93,7 +89,6 @@ describe Slang::Parser do
         parser.parse.should eq <<-BLOCK
         __slang__ << ("First line.").to_s(__slang__)
         __slang__ << "\n"
-        __slang__ << ""
         __slang__ << ("Second line.").to_s(__slang__)
         __slang__ << "\n"
         __slang__ << "  "
@@ -120,7 +115,6 @@ describe Slang::Parser do
         parser.parse.should eq <<-BLOCK
         __slang__ << ("First line.").to_s(__slang__)
         __slang__ << "\n"
-        __slang__ << ""
         __slang__ << ("Second line.").to_s(__slang__)
         __slang__ << "\n"
         __slang__ << "  "

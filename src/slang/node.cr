@@ -25,8 +25,8 @@ module Slang
     def printable_parents_count
       count = 0
       current_parent = parent
-      until current_parent.is_a?(Document)
-        count += 1 unless current_parent.class.name.ends_with?("Control")
+      until current_parent.is_a?(Document) || current_parent.is_a?(Nodes::Element) || current_parent.is_a?(Nodes::Code) || current_parent.text_block || self.text_block
+        count += 1
         current_parent = current_parent.parent
       end
       return count

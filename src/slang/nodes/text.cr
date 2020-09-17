@@ -18,7 +18,7 @@ module Slang
       def to_s(str, buffer_name)
         str << "#{buffer_name} << \" \"\n" if prepend_whitespace
         str << "#{buffer_name} << \"\n\"\n" if raw_text && !first_child? && !text_block && !empty_parent?
-        str << "#{buffer_name} << \"#{indentation[2..-1]}\"\n" if indent? && raw_text
+        str << "#{buffer_name} << \"#{indentation}\"\n" if indent? && raw_text
         str << "#{buffer_name} << "
 
         # Escaping.
