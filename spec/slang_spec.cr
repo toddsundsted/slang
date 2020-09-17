@@ -178,6 +178,32 @@ describe Slang do
       <div>"ah"</div>
       HTML
     end
+
+    it "nests without indentation" do
+      render(%{.one\n  .two\n    | <ah>}).should eq <<-HTML
+      <div class="one"><div class="two"><ah></div></div>
+      HTML
+    end
+
+    it "nests without indentation" do
+      render(%{.one\n  .two\n    /! Comment}).should eq <<-HTML
+      <div class="one"><div class="two"><!--Comment--></div></div>
+      HTML
+    end
+
+    it "nests without indentation" do
+      render(%{a\n b\n  c\n   d}).should eq <<-HTML
+      <a><b><c><d></d></c></b></a>
+      HTML
+    end
+
+    it "indents multiline text correctly" do
+      render(%[a\n  b\n    | A\n      B\n        C]).should eq <<-HTML
+      <a><b>A
+      B
+        C</b></a>
+      HTML
+    end
   end
 
   describe "raw html" do
