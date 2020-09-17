@@ -338,4 +338,14 @@ describe Slang do
       HTML
     end
   end
+
+  describe "crystal code" do
+    it "renders crystal code" do
+      res = render_file "spec/fixtures/crystal.slang"
+
+      res.should eq <<-HTML
+      <p class="aa bb cc"></p>
+      HTML
+    end
+  end
 end

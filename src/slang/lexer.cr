@@ -1,6 +1,6 @@
 module Slang
   class Lexer
-    RAWSTUFF = {"javascript:": "script", "css:": "style"}
+    RAWSTUFF = {"javascript:": "script", "css:": "style", "crystal:": "*code*"}
     getter token
 
     def initialize(string)
@@ -146,6 +146,9 @@ module Slang
         @token.type = :DOCTYPE
         next_char if current_char == ' '
         @token.value = consume_line
+      elsif @token.name == "*code*"
+        @token.type = :CODE
+        consume_line
       end
     end
 

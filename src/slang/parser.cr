@@ -18,7 +18,7 @@ module Slang
         when :DOCTYPE
           @document.nodes << Nodes::Doctype.new(@document, token)
           next_token
-        when :ELEMENT, :TEXT, :HTML, :COMMENT, :CONTROL, :OUTPUT
+        when :ELEMENT, :TEXT, :HTML, :COMMENT, :CONTROL, :CODE, :OUTPUT
           parent = @current_node
 
           # find the parent
@@ -32,10 +32,12 @@ module Slang
           node = case token.type
                  when :ELEMENT
                    Nodes::Element.new(parent, token)
-                 when :CONTROL
-                   Nodes::Control.new(parent, token)
                  when :COMMENT
                    Nodes::Comment.new(parent, token)
+                 when :CONTROL
+                   Nodes::Control.new(parent, token)
+                 when :CODE
+                   Nodes::Code.new(parent, token)
                  else
                    Nodes::Text.new(parent, token)
                  end

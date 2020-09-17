@@ -170,4 +170,57 @@ describe Slang::Lexer do
       end
     end
   end
+
+  describe "code blocks" do
+    string = %[crystal:\n  def foo\n    "foo"\n  end]
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line" do
+      token = lexer.next_token
+
+      it "is a text element" do
+        token.type.should eq(:CODE)
+        token.value.should be_nil
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+      end
+    end
+
+    describe "second line" do
+      token = lexer.next_token
+
+      it "is a text element" do
+        token.type.should eq(:TEXT)
+        token.value.should eq(%["def foo"])
+        token.column_number.should eq(3)
+        token.line_number.should eq(2)
+        token.text_block.should be_false
+      end
+    end
+
+    describe "third line" do
+      token = lexer.next_token
+
+      it "is a text element" do
+        token.type.should eq(:TEXT)
+        token.value.should eq(%["\\\"foo\\\""])
+        token.column_number.should eq(5)
+        token.line_number.should eq(3)
+        token.text_block.should be_false
+      end
+    end
+
+    describe "fourth line" do
+      token = lexer.next_token
+
+      it "is a text element" do
+        token.type.should eq(:TEXT)
+        token.value.should eq(%["end"])
+        token.column_number.should eq(3)
+        token.line_number.should eq(4)
+        token.text_block.should be_false
+      end
+    end
+  end
 end

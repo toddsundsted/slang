@@ -131,4 +131,28 @@ describe Slang::Parser do
       end
     end
   end
+
+  describe "code blocks" do
+    string = %[crystal:\n  def foo\n    "foo"\n  end]
+    parser = Slang::Parser.new(string)
+
+    it "parses the code block" do
+      parser.document.expansion.should eq([
+        {Slang::Document, 1, 0, nil, 1},
+        {Slang::Nodes::Code, 1, 1, nil, 2},
+        {Slang::Nodes::Text, 3, 2, %["def foo"], 1},
+        {Slang::Nodes::Text, 5, 3, %["\\\"foo\\\""], 0},
+        {Slang::Nodes::Text, 3, 4, %["end"], 0}
+      ])
+    end
+
+      it "renders the template code" do
+        parser.parse.should eq <<-BLOCK
+        def foo
+          "foo"
+        end
+
+        BLOCK
+      end
+  end
 end
