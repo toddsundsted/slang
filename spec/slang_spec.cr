@@ -98,10 +98,17 @@ describe Slang do
       HTML
     end
 
-    it "escapes output with single = " do
+    it "escapes output with single =" do
       val = %{"Hello" & world}
       render("span attr=val").should eq <<-HTML
-      <span attr="&quot;Hello&quot; & world"></span>
+      <span attr="&quot;Hello&quot; &amp; world"></span>
+      HTML
+    end
+
+    it "escapes escaped strings" do
+      val = %{&quot;Hello&quot; & world}
+      render("span attr=val").should eq <<-HTML
+      <span attr="&amp;quot;Hello&amp;quot; &amp; world"></span>
       HTML
     end
 
