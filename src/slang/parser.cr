@@ -45,8 +45,6 @@ module Slang
           if node.is_a?(Nodes::Control)
             if @control_nodes_per_column[node.column_number]?
               last_control_node = @control_nodes_per_column[node.column_number]
-              # puts "LAST CONTROL NODE"
-              # puts last_control_node.inspect
               if last_control_node.allow_branch?(node)
                 last_control_node.branches << node
               else
