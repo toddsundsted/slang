@@ -114,7 +114,7 @@ describe Slang do
 
     it "should allow quotes inside interpolated blocks " do
       person = {"name" => "cris"}
-      res = render_file("spec/fixtures/interpolation-attr.slim")
+      res = render_file("spec/fixtures/interpolation-attr.slang")
       res.should eq <<-HTML
       <input name="cris" value="hello">
       HTML
@@ -215,7 +215,7 @@ describe Slang do
 
   describe "raw html" do
     it "renders html" do
-      res = render_file "spec/fixtures/with_html.slang"
+      res = render_file "spec/fixtures/with-html.slang"
 
       res.should eq <<-HTML
       <table><tr><td>#{Process.pid}</td></tr></table>
