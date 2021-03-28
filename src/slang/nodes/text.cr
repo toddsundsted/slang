@@ -23,7 +23,7 @@ module Slang
 
         # Escaping.
         if escaped && parent.allow_children_to_escape?
-          str << "HTML.escape("
+          str << "::HTML.escape("
         end
 
         # This is an output (code) token and has children
