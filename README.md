@@ -1,4 +1,6 @@
-# Slang [![Build Status](https://travis-ci.org/jeromegn/slang.svg?branch=master)](https://travis-ci.org/jeromegn/slang)
+# Slang
+
+[![Build Status](https://github.com/toddsundsted/slang/actions/workflows/ci.yml/badge.svg)](https://github.com/toddsundsted/slang/actions)
 
 Lightweight, terse, templating language for Crystal. Now with more [Slim](https://github.com/slim-template/slim) compatibility.
 
@@ -10,7 +12,7 @@ Add this to your application's `shard.yml`:
 dependencies:
   slang:
     github: toddsundsted/slang
-    branch: master
+    branch: main
 ```
 
 ## Usage
@@ -24,7 +26,7 @@ Add this to your application's `shard.yml`:
 dependencies:
   slang:
     github: toddsundsted/slang
-    branch: master
+    branch: main
   kilt:
     github: jeromegn/kilt
 ```
