@@ -215,7 +215,7 @@ describe Slang do
 
   describe "raw html" do
     it "renders html" do
-      res = render_file "spec/fixtures/with-html.slang"
+      res = render_file "spec/fixtures/raw-html.slang"
 
       res.should eq <<-HTML
       <table><tr><td>#{Process.pid}</td></tr></table>
