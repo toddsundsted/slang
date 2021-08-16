@@ -23,7 +23,7 @@ module Slang
         if c_names && c_names != ""
           str << "#{buffer_name} << \" class\"\n"
           str << "#{buffer_name} << \"=\\\"\"\n"
-          str << "(\"#{c_names}\").to_s #{buffer_name}\n"
+          str << "(\"#{c_names}\").rstrip.to_s #{buffer_name}\n"
           str << "#{buffer_name} << \"\\\"\"\n"
         end
         attributes.each do |name, value|

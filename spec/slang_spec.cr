@@ -98,6 +98,18 @@ alert("8 * 3 + 8 * 4 = " + (num1 + num2));\
       HTML
     end
 
+    it "joins class attributes" do
+      render(%{span.foo class="bar"}).should eq <<-HTML
+      <span class="foo bar"></span>
+      HTML
+    end
+
+    it "strips trailing whitespace" do
+      render(%{span.quuz class=""}).should eq <<-HTML
+      <span class="quuz"></span>
+      HTML
+    end
+
     it "escapes output with single =" do
       val = %{"Hello" & world}
       render("span attr=val").should eq <<-HTML
