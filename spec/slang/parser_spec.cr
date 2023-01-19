@@ -149,4 +149,47 @@ describe Slang::Parser do
         BLOCK
       end
   end
+
+  describe "ending in do" do
+    string = %[div\n  == foo_bar do\n    baz\ndiv]
+    parser = Slang::Parser.new(string)
+
+    it "parses the code block" do
+      parser.document.expansion.should eq([
+        {Slang::Document, 1, 0, nil, 2},
+        {Slang::Nodes::Element, 1, 1, nil, 1},
+        {Slang::Nodes::Text, 3, 2, "foo_bar do", 1},
+        {Slang::Nodes::Element, 5, 3, nil, 0},
+        {Slang::Nodes::Element, 1, 4, nil, 0}
+      ])
+    end
+  end
+
+  describe "ending in do" do
+    string = %[div == foo_bar do\n  baz\ndiv]
+    parser = Slang::Parser.new(string)
+
+    it "parses the code block" do
+      parser.document.expansion.should eq([
+        {Slang::Document, 1, 0, nil, 2},
+        {Slang::Nodes::Element, 1, 1, nil, 1},
+        {Slang::Nodes::Text, 5, 1, "foo_bar do", 1},
+        {Slang::Nodes::Element, 3, 2, nil, 0},
+        {Slang::Nodes::Element, 1, 3, nil, 0}
+      ])
+    end
+  end
+
+  describe "two elements" do
+    string = %[div\ndiv]
+    parser = Slang::Parser.new(string)
+
+    it "parses the code block" do
+      parser.document.expansion.should eq([
+        {Slang::Document, 1, 0, nil, 2},
+        {Slang::Nodes::Element, 1, 1, nil, 0},
+        {Slang::Nodes::Element, 1, 2, nil, 0}
+      ])
+    end
+  end
 end

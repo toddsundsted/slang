@@ -26,6 +26,9 @@ module Slang
             # column number is smaller than the node we're processing
             # therefore it is the parent
             break if parent.column_number < token.column_number
+            if parent.token.type == :OUTPUT && parent.token.inline
+              break if parent.parent.column_number < token.column_number
+            end
             parent = parent.parent
           end
 

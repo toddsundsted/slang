@@ -324,8 +324,10 @@ alert("8 * 3 + 8 * 4 = " + (num1 + num2));\
     end
 
     it "renders complex form helpers" do
-      FormView.new.to_s.should eq <<-HTML
+      FormView.new.to_s.should eq <<-HTML.gsub("\n", "")
       <form><input type="text" name="hello" \\><input type="submit"></form>
+      <div><form><input type="text" name="hello" \\><input type="submit"></form></div>
+      <div><form><input type="text" name="hello" \\><input type="submit"></form></div>
       HTML
     end
 
