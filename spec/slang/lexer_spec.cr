@@ -223,4 +223,50 @@ describe Slang::Lexer do
       end
     end
   end
+
+  describe "inline control code" do
+    string = %[div - foo_bar]
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line" do
+      token = lexer.next_token
+
+      it "is a div element" do
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("div")
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+      end
+    end
+
+    describe "second line" do
+      token = lexer.next_token
+
+      it "is a control element" do
+        token.type.should eq(:CONTROL)
+        token.value.should eq("foo_bar")
+        token.column_number.should eq(5)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+      end
+    end
+  end
+
+  describe "control code" do
+    string = %[- foo_bar]
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line" do
+      token = lexer.next_token
+
+      it "is a control element" do
+        token.type.should eq(:CONTROL)
+        token.value.should eq("foo_bar")
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+      end
+    end
+  end
 end

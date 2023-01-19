@@ -44,11 +44,11 @@ module Slang
         consume_newline
       when '.', '#', .ascii_letter?
         inline ? consume_text : consume_element
-      when '-'
-        inline ? consume_text : consume_control
       when ':'
         inline = false # don't consider this "inline" for output
         consume_inline_element
+      when '-'
+        consume_control
       when '='
         consume_output
       when '|', '\''

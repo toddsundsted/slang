@@ -150,7 +150,39 @@ describe Slang::Parser do
       end
   end
 
-  describe "ending in do" do
+  describe "control block ending in do" do
+    string = %[div\n  - foo_bar do |i|\n    baz = i\ndiv]
+    parser = Slang::Parser.new(string)
+
+    it "parses the code block" do
+      parser.document.expansion.should eq([
+        {Slang::Document, 1, 0, nil, 2},
+        {Slang::Nodes::Element, 1, 1, nil, 1},
+        {Slang::Nodes::Control, 3, 2, "foo_bar do |i|", 1},
+        {Slang::Nodes::Element, 5, 3, nil, 1},
+        {Slang::Nodes::Text, 9, 3, "i", 0},
+        {Slang::Nodes::Element, 1, 4, nil, 0}
+      ])
+    end
+  end
+
+  describe "control block ending in do" do
+    string = %[div - foo_bar do |i|\n  baz = i\ndiv]
+    parser = Slang::Parser.new(string)
+
+    it "parses the code block" do
+      parser.document.expansion.should eq([
+        {Slang::Document, 1, 0, nil, 2},
+        {Slang::Nodes::Element, 1, 1, nil, 1},
+        {Slang::Nodes::Control, 5, 1, "foo_bar do |i|", 1},
+        {Slang::Nodes::Element, 3, 2, nil, 1},
+        {Slang::Nodes::Text, 7, 2, "i", 0},
+        {Slang::Nodes::Element, 1, 3, nil, 0}
+      ])
+    end
+  end
+
+  describe "output block ending in do" do
     string = %[div\n  == foo_bar do\n    baz\ndiv]
     parser = Slang::Parser.new(string)
 
@@ -165,7 +197,7 @@ describe Slang::Parser do
     end
   end
 
-  describe "ending in do" do
+  describe "output block ending in do" do
     string = %[div == foo_bar do\n  baz\ndiv]
     parser = Slang::Parser.new(string)
 

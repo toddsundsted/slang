@@ -318,8 +318,10 @@ alert("8 * 3 + 8 * 4 = " + (num1 + num2));\
     it "renders a simple block" do
       res = render_file "spec/fixtures/blocks.slang"
 
-      res.should eq <<-HTML
+      res.should eq <<-HTML.gsub("\n", "")
       <p>1</p><p>2</p><p>3</p>
+      <div><p>1</p><p>2</p><p>3</p></div>
+      <div><p>1</p><p>2</p><p>3</p></div>
       HTML
     end
 
