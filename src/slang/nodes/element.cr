@@ -49,10 +49,6 @@ module Slang
         str << "#{buffer_name} << \" \"\n" if append_whitespace
       end
 
-      def only_inline_children?
-        nodes.all? { |n| n.inline }
-      end
-
       def self_closing?
         SELF_CLOSING_TAGS.includes?(name)
       end
