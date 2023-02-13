@@ -1,6 +1,7 @@
 name: build
 on:
   push:
+    branches: [main]
   pull_request:
     branches: [main]
   schedule:
@@ -15,9 +16,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Download source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Crystal
-        uses: crystal-lang/install-crystal@31648d0e69d6c8eaccb0b483bb2283515b1153ae
+        uses: crystal-lang/install-crystal@v1
         with:
           crystal: ${{ matrix.crystal }}
       - name: Install shards
