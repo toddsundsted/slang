@@ -37,12 +37,16 @@ module Slang
         value.not_nil!.starts_with?("case ")
       end
 
+      def in?
+        value.not_nil!.starts_with?("in ")
+      end
+
       def when?
         value.not_nil!.starts_with?("when ")
       end
 
       def branch?
-        else? || elsif? || rescue? || when? || ensure?
+        else? || elsif? || rescue? || in? || when? || ensure?
       end
 
       def branchable?
@@ -57,7 +61,7 @@ module Slang
         elsif begin?
           branch.rescue? || branch.ensure? || branch.else?
         elsif case?
-          branch.when? || branch.else?
+          branch.in? || branch.when? || branch.else?
         else
           false
         end

@@ -245,6 +245,16 @@ alert("8 * 3 + 8 * 4 = " + (num1 + num2));\
     end
   end
 
+  describe "case in" do
+    it "renders the correct branch" do
+      res = render_file "spec/fixtures/case-in.slang"
+
+      res.should eq <<-HTML
+      <div><span>"int" is 123</span></div>
+      HTML
+    end
+  end
+
   describe "case when" do
     it "renders the correct branches" do
       res = render_file "spec/fixtures/case-when.slang"
