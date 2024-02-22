@@ -57,7 +57,7 @@ module Slang
         @raw_text_column = (@column_number - text.size) + 2 # +2 for the quotation marks
       when '<'
         @token.escaped = false
-        consume_html
+        consume_text
       when '/'
         consume_comment
       else
@@ -362,12 +362,6 @@ module Slang
           end
         end
       end
-    end
-
-    private def consume_html
-      @token.type = :HTML
-      @token.escaped = false
-      @token.value = "\"#{consume_line}\""
     end
 
     private def consume_line

@@ -18,7 +18,7 @@ module Slang
         when :DOCTYPE
           @document.nodes << Nodes::Doctype.new(@document, token)
           next_token
-        when :ELEMENT, :TEXT, :HTML, :COMMENT, :CONTROL, :CODE, :OUTPUT
+        when :ELEMENT, :TEXT, :COMMENT, :CONTROL, :CODE, :OUTPUT
           parent = @current_node
 
           # find the parent
