@@ -7,7 +7,13 @@ module Slang
       :attributes,
       :id
 
-    property :value, :escaped, :inline, :visible, :conditional, :prepend_whitespace, :append_whitespace, :raw_text, :text_block
+    property :value, :escaped, :inline, :visible, :conditional, :prepend_whitespace, :append_whitespace
+
+    # The token is part of a block of raw text.
+    property :raw_text
+
+    # The token is the first line of a block of verbatim text.
+    property :text_block
 
     @value : String?
     @id : String?
