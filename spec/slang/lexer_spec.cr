@@ -6,9 +6,9 @@ describe Slang::Lexer do
     lexer = Slang::Lexer.new(string)
 
     describe "first line" do
-      token = lexer.next_token
-
       it "is a script element" do
+        token = lexer.next_token
+
         token.type.should eq(:ELEMENT)
         token.name.should eq("script")
         token.column_number.should eq(1)
@@ -18,9 +18,9 @@ describe Slang::Lexer do
     end
 
     describe "second line" do
-      token = lexer.next_token
-
       it "is a text element" do
+        token = lexer.next_token
+
         token.type.should eq(:TEXT)
         token.value.should eq(%["if (x) {"])
         token.column_number.should eq(3)
@@ -30,9 +30,9 @@ describe Slang::Lexer do
     end
 
     describe "third line" do
-      token = lexer.next_token
-
       it "is a text element" do
+        token = lexer.next_token
+
         token.type.should eq(:TEXT)
         token.value.should eq(%["x;"])
         token.column_number.should eq(5)
@@ -42,9 +42,9 @@ describe Slang::Lexer do
     end
 
     describe "fourth line" do
-      token = lexer.next_token
-
       it "is a text element" do
+        token = lexer.next_token
+
         token.type.should eq(:TEXT)
         token.value.should eq(%["}"])
         token.column_number.should eq(3)
@@ -59,9 +59,9 @@ describe Slang::Lexer do
     lexer = Slang::Lexer.new(string)
 
     describe "first line" do
-      token = lexer.next_token
-
       it "is a style element" do
+        token = lexer.next_token
+
         token.type.should eq(:ELEMENT)
         token.name.should eq("style")
         token.column_number.should eq(1)
@@ -71,9 +71,9 @@ describe Slang::Lexer do
     end
 
     describe "second line" do
-      token = lexer.next_token
-
       it "is a text element" do
+        token = lexer.next_token
+
         token.type.should eq(:TEXT)
         token.value.should eq(%["p {"])
         token.column_number.should eq(3)
@@ -83,9 +83,9 @@ describe Slang::Lexer do
     end
 
     describe "third line" do
-      token = lexer.next_token
-
       it "is a text element" do
+        token = lexer.next_token
+
         token.type.should eq(:TEXT)
         token.value.should eq(%["display: none;"])
         token.column_number.should eq(5)
@@ -95,9 +95,9 @@ describe Slang::Lexer do
     end
 
     describe "fourth line" do
-      token = lexer.next_token
-
       it "is a text element" do
+        token = lexer.next_token
+
         token.type.should eq(:TEXT)
         token.value.should eq(%["}"])
         token.column_number.should eq(3)
@@ -113,9 +113,9 @@ describe Slang::Lexer do
       lexer = Slang::Lexer.new(string)
 
       describe "first line" do
-        token = lexer.next_token
-
         it "is a text element" do
+          token = lexer.next_token
+
           token.type.should eq(:TEXT)
           token.value.should eq(%["First line."])
           token.column_number.should eq(1)
@@ -126,9 +126,9 @@ describe Slang::Lexer do
       end
 
       describe "second line" do
-        token = lexer.next_token
-
         it "is a text element" do
+          token = lexer.next_token
+
           token.type.should eq(:TEXT)
           token.value.should eq(%["Second line."])
           token.column_number.should eq(3)
@@ -144,9 +144,9 @@ describe Slang::Lexer do
       lexer = Slang::Lexer.new(string)
 
       describe "first line" do
-        token = lexer.next_token
-
         it "is a text element" do
+          token = lexer.next_token
+
           token.type.should eq(:TEXT)
           token.value.should eq(%["First line."])
           token.column_number.should eq(1)
@@ -157,9 +157,9 @@ describe Slang::Lexer do
       end
 
       describe "second line" do
-        token = lexer.next_token
-
         it "is a text element" do
+          token = lexer.next_token
+
           token.type.should eq(:TEXT)
           token.value.should eq(%["Second line."])
           token.column_number.should eq(3)
@@ -176,9 +176,9 @@ describe Slang::Lexer do
     lexer = Slang::Lexer.new(string)
 
     describe "first line" do
-      token = lexer.next_token
-
       it "is a text element" do
+        token = lexer.next_token
+
         token.type.should eq(:CODE)
         token.value.should be_nil
         token.column_number.should eq(1)
@@ -188,9 +188,9 @@ describe Slang::Lexer do
     end
 
     describe "second line" do
-      token = lexer.next_token
-
       it "is a text element" do
+        token = lexer.next_token
+
         token.type.should eq(:TEXT)
         token.value.should eq(%["def foo"])
         token.column_number.should eq(3)
@@ -200,9 +200,9 @@ describe Slang::Lexer do
     end
 
     describe "third line" do
-      token = lexer.next_token
-
       it "is a text element" do
+        token = lexer.next_token
+
         token.type.should eq(:TEXT)
         token.value.should eq(%["\\\"foo\\\""])
         token.column_number.should eq(5)
@@ -212,9 +212,9 @@ describe Slang::Lexer do
     end
 
     describe "fourth line" do
-      token = lexer.next_token
-
       it "is a text element" do
+        token = lexer.next_token
+
         token.type.should eq(:TEXT)
         token.value.should eq(%["end"])
         token.column_number.should eq(3)
@@ -229,9 +229,9 @@ describe Slang::Lexer do
     lexer = Slang::Lexer.new(string)
 
     describe "first line" do
-      token = lexer.next_token
-
       it "is a div element" do
+        token = lexer.next_token
+
         token.type.should eq(:ELEMENT)
         token.name.should eq("div")
         token.column_number.should eq(1)
@@ -241,9 +241,9 @@ describe Slang::Lexer do
     end
 
     describe "second line" do
-      token = lexer.next_token
-
       it "is a control element" do
+        token = lexer.next_token
+
         token.type.should eq(:CONTROL)
         token.value.should eq("foo_bar")
         token.column_number.should eq(5)
@@ -258,9 +258,9 @@ describe Slang::Lexer do
     lexer = Slang::Lexer.new(string)
 
     describe "first line" do
-      token = lexer.next_token
-
       it "is a control element" do
+        token = lexer.next_token
+
         token.type.should eq(:CONTROL)
         token.value.should eq("foo_bar")
         token.column_number.should eq(1)
