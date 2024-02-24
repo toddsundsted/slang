@@ -18,9 +18,16 @@ module Slang
         when :DOCTYPE
           @document.nodes << Nodes::Doctype.new(@document, token)
           next_token
+        when :ATTRIBUTE
+          parent = @current_node
+          # find the parent
+          until parent.is_a?(Nodes::Element)
+            parent = parent.parent
+          end
+          parent.nodes << Nodes::Attribute.new(parent, token)
+          next_token
         when :ELEMENT, :TEXT, :COMMENT, :CONTROL, :CODE, :OUTPUT
           parent = @current_node
-
           # find the parent
           until parent.is_a?(Document)
             # column number is smaller than the node we're processing
@@ -35,6 +42,8 @@ module Slang
           node = case token.type
                  when :ELEMENT
                    Nodes::Element.new(parent, token)
+                 when :ATTRIBUTE
+                    Nodes::Attribute.new(parent, token)
                  when :COMMENT
                    Nodes::Comment.new(parent, token)
                  when :CONTROL
@@ -45,7 +54,32 @@ module Slang
                    Nodes::Text.new(parent, token)
                  end
 
-          if node.is_a?(Nodes::Control)
+          if node.is_a?(Nodes::Element)
+            node.attributes.each do |name, values|
+              if values.is_a?(String)
+                attribute = Token.new
+                attribute.type = :ATTRIBUTE
+                attribute.name = name
+                attribute.value = values
+                attribute.line_number = token.line_number
+                attribute.column_number = token.column_number
+                attribute.escaped = false
+                node.nodes << Nodes::Attribute.new(node, attribute)
+              else
+                values.each do |value|
+                  attribute = Token.new
+                  attribute.type = :ATTRIBUTE
+                  attribute.name = name
+                  attribute.value = value
+                  attribute.line_number = token.line_number
+                  attribute.column_number = token.column_number
+                  attribute.escaped = false
+                  node.nodes << Nodes::Attribute.new(node, attribute)
+                end
+              end
+            end
+            parent.nodes << node
+          elsif node.is_a?(Nodes::Control)
             if @control_nodes_per_column[node.column_number]?
               last_control_node = @control_nodes_per_column[node.column_number]
               if last_control_node.allow_branch?(node)

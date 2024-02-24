@@ -212,7 +212,7 @@ describe Slang::Parser do
     end
   end
 
-  describe "two elements" do
+  describe "two tags" do
     string = %[div\ndiv]
     parser = Slang::Parser.new(string)
 
@@ -222,6 +222,82 @@ describe Slang::Parser do
         {Slang::Nodes::Element, 1, 1, nil, 0},
         {Slang::Nodes::Element, 1, 2, nil, 0}
       ])
+    end
+  end
+
+  describe "tag with attributes" do
+    string = %[div class="foo" id=bar type=baz]
+    parser = Slang::Parser.new(string)
+
+    it "parses the element with attributes" do
+      parser.document.expansion.should eq([
+        {Slang::Document, 1, 0, nil, 1},
+        {Slang::Nodes::Element, 1, 1, nil, 3},
+        {Slang::Nodes::Attribute, 5, 1, %["foo"], 0},
+        {Slang::Nodes::Attribute, 17, 1, %[bar], 0},
+        {Slang::Nodes::Attribute, 24, 1, %[baz], 0}
+      ])
+    end
+
+    it "renders the template code" do
+      parser.parse.should eq <<-BLOCK
+      __slang__ << "<div"
+      __slang__ << " id=\\\""
+      ::HTML.escape((bar).to_s, __slang__)
+      __slang__ << "\\\""
+      __slang__ << " class=\\\""
+      ::HTML.escape((\"foo\").to_s, __slang__)
+      __slang__ << "\\\""
+      unless (baz) == false
+      __slang__ << " type"
+      unless (baz) == true
+      __slang__ << "=\\\""
+      ::HTML.escape((baz).to_s, __slang__)
+      __slang__ << "\\\""
+      end
+      end
+      __slang__ << ">"
+      __slang__ << "</div>"
+
+      BLOCK
+    end
+  end
+
+  describe "tag with shortcuts" do
+    string = %[span.foo#bar type=baz]
+    parser = Slang::Parser.new(string)
+
+    it "parses the element with attributes" do
+      parser.document.expansion.should eq([
+        {Slang::Document, 1, 0, nil, 1},
+        {Slang::Nodes::Element, 1, 1, nil, 3},
+        {Slang::Nodes::Attribute, 1, 1, %["foo"], 0}, # FIXME: This should be 5
+        {Slang::Nodes::Attribute, 1, 1, %["bar"], 0}, # FIXME: This should be 9
+        {Slang::Nodes::Attribute, 14, 1, %[baz], 0}
+      ])
+    end
+
+    it "renders the template code" do
+      parser.parse.should eq <<-BLOCK
+      __slang__ << "<span"
+      __slang__ << " id=\\\""
+      (\"bar\").to_s(__slang__)
+      __slang__ << "\\\""
+      __slang__ << " class=\\\""
+      (\"foo\").to_s(__slang__)
+      __slang__ << "\\\""
+      unless (baz) == false
+      __slang__ << " type"
+      unless (baz) == true
+      __slang__ << "=\\\""
+      ::HTML.escape((baz).to_s, __slang__)
+      __slang__ << "\\\""
+      end
+      end
+      __slang__ << ">"
+      __slang__ << "</span>"
+
+      BLOCK
     end
   end
 end

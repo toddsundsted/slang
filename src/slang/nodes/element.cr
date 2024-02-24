@@ -1,14 +1,13 @@
 module Slang
   module Nodes
     class Element < Node
-      SELF_CLOSING_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "menuitem", "meta", "param", "source", "track", "wbr"}
+      SELF_CLOSING_TAGS = %w{area base br col embed hr img input keygen link menuitem meta param source track wbr}
       RAW_TEXT_TAGS     = %w(script style)
 
-      delegate :name, :id, :attributes, to: @token
+      delegate :name, :attributes, to: @token
 
-      def generate_class_names
-        names = attributes.delete("class").as Set
-        names.join(" ")
+      def self_closing?
+        SELF_CLOSING_TAGS.includes?(name)
       end
 
       def allow_children_to_escape?
@@ -18,21 +17,36 @@ module Slang
       def to_s(str, buffer_name)
         str << "#{buffer_name} << \" \"\n" if prepend_whitespace
         str << "#{buffer_name} << \"<#{name}\"\n"
-        str << "#{buffer_name} << \" id=\\\"#{id}\\\"\"\n" if id
-        c_names = generate_class_names
-        if c_names && c_names != ""
-          str << "#{buffer_name} << \" class\"\n"
-          str << "#{buffer_name} << \"=\\\"\"\n"
-          str << "(\"#{c_names}\").rstrip.to_s #{buffer_name}\n"
+        if (attribute = select_attributes.find(&.id?))
+          str << "#{buffer_name} << \" id=\\\"\"\n"
+          if attribute.escaped
+            str << "::HTML.escape((#{attribute.value}).to_s, #{buffer_name})\n"
+          else
+            str << "(#{attribute.value}).to_s(#{buffer_name})\n"
+          end
           str << "#{buffer_name} << \"\\\"\"\n"
         end
-        attributes.each do |name, value|
-          str << "unless #{value} == false\n" # remove the attribute if value evaluates to false
+        unless (attributes = select_attributes.select(&.class?)).empty?
+          str << "#{buffer_name} << \" class=\\\"\"\n"
+          attributes.each_with_index do |attribute, i|
+            str << "#{buffer_name} << \" \"\n" if i > 0
+            if attribute.escaped
+              str << "::HTML.escape((#{attribute.value}).to_s, #{buffer_name})\n"
+            else
+              str << "(#{attribute.value}).to_s(#{buffer_name})\n"
+            end
+          end
+          str << "#{buffer_name} << \"\\\"\"\n"
+        end
+        select_attributes.reject(&.id_or_class?).each do |attribute|
+          name, value = attribute.name, attribute.value
+          # remove the attribute if value evaluates to false
+          # remove the value if value evaluates to true
+          str << "unless (#{value}) == false\n"
           str << "#{buffer_name} << \" #{name}\"\n"
-          str << "unless #{value} == true\n" # remove the value if value evaluates to true
-          # any other attribute value.
+          str << "unless (#{value}) == true\n"
           str << "#{buffer_name} << \"=\\\"\"\n"
-          str << "#{buffer_name} << ::HTML.escape(#{value}.to_s)\n"
+          str << "::HTML.escape((#{value}).to_s, #{buffer_name})\n"
           str << "#{buffer_name} << \"\\\"\"\n"
           str << "end\n"
           str << "end\n"
@@ -49,8 +63,8 @@ module Slang
         str << "#{buffer_name} << \" \"\n" if append_whitespace
       end
 
-      def self_closing?
-        SELF_CLOSING_TAGS.includes?(name)
+      private def select_attributes
+        nodes.select(Attribute)
       end
     end
   end

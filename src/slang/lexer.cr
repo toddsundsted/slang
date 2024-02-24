@@ -1,6 +1,21 @@
 module Slang
   class Lexer
     RAWSTUFF = {"javascript:": "script", "css:": "style", "crystal:": "*code*"}
+
+    ATTR_OPEN_CLOSE_MAP = {
+      '{' => '}',
+      '[' => ']',
+      '(' => ')',
+      ' ' => ' ',
+    }
+
+    STRING_OPEN_CLOSE_CHARS_MAP = {
+      '(' => ')',
+      '{' => '}',
+      '[' => ']',
+      '<' => '>',
+    }
+
     getter token
 
     def initialize(string)
@@ -9,6 +24,7 @@ module Slang
       @line_number = 1
       @column_number = 1
       @last_token = @token
+      @last_delimiter = ' '
       @raw_text_column = 0
     end
 
@@ -32,7 +48,7 @@ module Slang
         @raw_text_column = 0
       end
 
-      inline = @raw_text_column > 0 || (@last_token.type == :ELEMENT && @last_token.line_number == @line_number)
+      inline = @raw_text_column > 0 || (@last_token.type.in?([:ELEMENT, :ATTRIBUTE]) && @last_token.line_number == @line_number)
 
       case current_char
       when '\0'
@@ -43,9 +59,29 @@ module Slang
       when '\n'
         consume_newline
       when '.', '#', .ascii_letter?
-        inline ? consume_text : consume_element
+        if inline
+          current_attr_name =
+            if current_char.ascii_letter?
+              consume_html_valid_name
+            end
+          if current_attr_name && current_char == '='
+            open_char = @last_delimiter
+            close_char = ATTR_OPEN_CLOSE_MAP[open_char]
+            current_attr_value = consume_value(open_char, close_char)
+            @token.type = :ATTRIBUTE
+            @token.name = current_attr_name
+            @token.value = current_attr_value
+          else
+            go_back(current_attr_name.size, current_attr_name.bytesize) if current_attr_name
+            consume_text
+          end
+        else
+          @token.escaped = false
+          consume_element
+        end
       when ':'
         inline = false # don't consider this "inline" for output
+        @token.escaped = false
         consume_inline_element
       when '-'
         consume_control
@@ -62,8 +98,18 @@ module Slang
         consume_comment
       else
         if inline
-          @token.escaped = false
-          consume_text
+          if current_char.in?(ATTR_OPEN_CLOSE_MAP.keys) && @last_token.type == :ELEMENT
+            @token.type = :NEWLINE
+            @last_delimiter = current_char
+            next_char
+          elsif current_char.in?(ATTR_OPEN_CLOSE_MAP.values) && @last_token.type == :ATTRIBUTE
+            @token.type = :NEWLINE
+            @last_delimiter = current_char
+            next_char
+          else
+            @token.escaped = false
+            consume_text
+          end
         else
           unexpected_char
         end
@@ -72,13 +118,6 @@ module Slang
       @token.raw_text = (@raw_text_column > 0)
       @token.inline = inline unless @raw_text_column > 0
     end
-
-    ATTR_OPEN_CLOSE_MAP = {
-      '{' => '}',
-      '[' => ']',
-      '(' => ')',
-      ' ' => ' ',
-    }
 
     private def consume_element
       @token.type = :ELEMENT
@@ -99,12 +138,6 @@ module Slang
         when '>'
           @token.append_whitespace = true
           next_char
-        when ' ', '[', '(', '{'
-          close_char = ATTR_OPEN_CLOSE_MAP[current_char]
-          open_char = current_char
-          next_char
-          consume_element_attributes(open_char, close_char)
-          break
         else
           break
         end
@@ -115,29 +148,6 @@ module Slang
       next_char # skip ':'
       skip_whitespace
       consume_element
-    end
-
-    private def consume_element_attributes(open_char, close_char)
-      current_attr_name = ""
-
-      loop do
-        case current_char
-        when .alphanumeric?
-          break unless current_attr_name.empty?
-          current_attr_name = consume_html_valid_name
-        when '='
-          break if current_attr_name.empty?
-          @token.add_attribute current_attr_name, consume_value(open_char, close_char), true
-          current_attr_name = ""
-        when ' ', close_char
-          break unless current_attr_name.empty?
-          next_char
-        else
-          break
-        end
-      end
-
-      go_back(current_attr_name.size, current_attr_name.bytesize)
     end
 
     private def consume_element_name
@@ -153,15 +163,11 @@ module Slang
     end
 
     private def consume_element_class
-      @token.add_attribute "class", consume_html_valid_name, false
+      @token.add_attribute "class", consume_html_valid_name.inspect, false
     end
 
     private def consume_element_id
-      @token.id = consume_html_valid_name
-    end
-
-    private def consume_tag_component
-      consume_html_valid_name
+      @token.add_attribute "id", consume_html_valid_name.inspect, false
     end
 
     private def consume_html_valid_name
@@ -376,13 +382,6 @@ module Slang
         end
       end
     end
-
-    STRING_OPEN_CLOSE_CHARS_MAP = {
-      '(' => ')',
-      '{' => '}',
-      '[' => ']',
-      '<' => '>',
-    }
 
     private def consume_value(open_char, close_char)
       String.build do |str|

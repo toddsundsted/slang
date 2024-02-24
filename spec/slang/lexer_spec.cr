@@ -45,6 +45,158 @@ describe Slang::Lexer do
     end
   end
 
+  describe "html tags with attributes" do
+    string = %[div class="foo" id=bar]
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line, first token" do
+      it "is a div element" do
+        token = lexer.next_token
+
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("div")
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+      end
+    end
+
+    describe "first line, second token" do
+      it "is a class attribute" do
+        token = lexer.next_token
+
+        token.type.should eq(:ATTRIBUTE)
+        token.name.should eq("class")
+        token.value.should eq(%["foo"])
+        token.column_number.should eq(5)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_true
+      end
+    end
+
+    describe "first line, third token" do
+      it "is an id attribute" do
+        token = lexer.next_token
+
+        token.type.should eq(:ATTRIBUTE)
+        token.name.should eq("id")
+        token.value.should eq(%[bar])
+        token.column_number.should eq(17)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_true
+      end
+    end
+  end
+
+  describe "html tags with wrappers" do
+    string = %[div(class="foo" id=bar)]
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line, first token" do
+      it "is a div element" do
+        token = lexer.next_token
+
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("div")
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+      end
+    end
+
+    describe "first line, second token" do
+      it "is a class attribute" do
+        token = lexer.next_token
+
+        token.type.should eq(:ATTRIBUTE)
+        token.name.should eq("class")
+        token.value.should eq(%["foo"])
+        token.column_number.should eq(5)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_true
+      end
+    end
+
+    describe "first line, third token" do
+      it "is an id attribute" do
+        token = lexer.next_token
+
+        token.type.should eq(:ATTRIBUTE)
+        token.name.should eq("id")
+        token.value.should eq(%[bar])
+        token.column_number.should eq(17)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_true
+      end
+    end
+  end
+
+  describe "html tags with shortcuts" do
+    string =  %[div#foo.bar]
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line" do
+      token = lexer.next_token
+
+      it "is a div element" do
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("div")
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+      end
+
+      it "has an id attribute" do
+        token.attributes["id"].should eq("\"foo\"")
+      end
+
+      it "has a class attribute" do
+        token.attributes["class"].should eq(Set{"\"bar\""})
+      end
+    end
+  end
+
+  describe "shortcuts with implicit tags" do
+    string = %[#foo.bar]
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line" do
+      token = lexer.next_token
+
+      it "is a div element" do
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("div")
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+      end
+
+      it "has an id attribute" do
+        token.attributes["id"].should eq("\"foo\"")
+      end
+
+      it "has a class attribute" do
+        token.attributes["class"].should eq(Set{"\"bar\""})
+      end
+    end
+  end
+
   describe "javascript blocks" do
     string = %[javascript:\n  if (x) {\n    x;\n  }]
     lexer = Slang::Lexer.new(string)

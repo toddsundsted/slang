@@ -2,10 +2,9 @@ module Slang
   class Token
     property :type
     property :line_number, :column_number
+
     # elements
-    property :name,
-      :attributes,
-      :id
+    property :name, :attributes
 
     property :value, :escaped, :inline, :visible, :conditional, :prepend_whitespace, :append_whitespace
 
