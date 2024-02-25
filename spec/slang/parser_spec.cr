@@ -246,7 +246,9 @@ describe Slang::Parser do
       ::HTML.escape((bar).to_s, __slang__)
       __slang__ << "\\\""
       __slang__ << " class=\\\""
+      if ("foo").presence
       ::HTML.escape((\"foo\").to_s, __slang__)
+      end
       __slang__ << "\\\""
       unless (baz) == false
       __slang__ << " type"
@@ -284,7 +286,9 @@ describe Slang::Parser do
       (\"bar\").to_s(__slang__)
       __slang__ << "\\\""
       __slang__ << " class=\\\""
+      if ("foo").presence
       (\"foo\").to_s(__slang__)
+      end
       __slang__ << "\\\""
       unless (baz) == false
       __slang__ << " type"

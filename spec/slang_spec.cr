@@ -104,12 +104,11 @@ alert("8 * 3 + 8 * 4 = " + (num1 + num2));\
       HTML
     end
 
-    # TODO: fix or remove
-    # it "strips trailing whitespace" do
-    #   render(%{span.quuz class=""}).should eq <<-HTML
-    #   <span class="quuz"></span>
-    #   HTML
-    # end
+    it "strips trailing whitespace" do
+      render(%{span.quuz class=""}).should eq <<-HTML
+      <span class="quuz"></span>
+      HTML
+    end
 
     it "escapes output with single =" do
       val = %{"Hello" & world}

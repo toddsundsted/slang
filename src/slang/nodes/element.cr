@@ -29,12 +29,14 @@ module Slang
         unless (attributes = select_attributes.select(&.class?)).empty?
           str << "#{buffer_name} << \" class=\\\"\"\n"
           attributes.each_with_index do |attribute, i|
+            str << "if (#{attribute.value}).presence\n"
             str << "#{buffer_name} << \" \"\n" if i > 0
             if attribute.escaped
               str << "::HTML.escape((#{attribute.value}).to_s, #{buffer_name})\n"
             else
               str << "(#{attribute.value}).to_s(#{buffer_name})\n"
             end
+            str << "end\n"
           end
           str << "#{buffer_name} << \"\\\"\"\n"
         end
