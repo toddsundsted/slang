@@ -3,7 +3,7 @@ require "../spec_helper"
 module Slang
   class Node
     def expansion
-      nodes.reduce([{self.class, column_number, line_number, value, nodes.size}]) do |acc, node|
+      nodes.reduce([{self.class, column_number, line_number, value || name, nodes.size}]) do |acc, node|
         acc + node.expansion
       end
     end
@@ -18,7 +18,7 @@ describe Slang::Parser do
     it "parses the javascript block" do
       parser.document.expansion.should eq([
         {Slang::Document, 1, 0, nil, 1},
-        {Slang::Nodes::Element, 1, 1, nil, 2},
+        {Slang::Nodes::Element, 1, 1, "script", 2},
         {Slang::Nodes::Text, 3, 2, %["if (x) {"], 1},
         {Slang::Nodes::Text, 5, 3, %["x;"], 0},
         {Slang::Nodes::Text, 3, 4, %["}"], 0}
@@ -48,7 +48,7 @@ describe Slang::Parser do
     it "parses the css block" do
       parser.document.expansion.should eq([
         {Slang::Document, 1, 0, nil, 1},
-        {Slang::Nodes::Element, 1, 1, nil, 2},
+        {Slang::Nodes::Element, 1, 1, "style", 2},
         {Slang::Nodes::Text, 3, 2, %["p {"], 1},
         {Slang::Nodes::Text, 5, 3, %["display: none;"], 0},
         {Slang::Nodes::Text, 3, 4, %["}"], 0}
@@ -157,11 +157,11 @@ describe Slang::Parser do
     it "parses the code block" do
       parser.document.expansion.should eq([
         {Slang::Document, 1, 0, nil, 2},
-        {Slang::Nodes::Element, 1, 1, nil, 1},
+        {Slang::Nodes::Element, 1, 1, "div", 1},
         {Slang::Nodes::Control, 3, 2, "foo_bar do |i|", 1},
-        {Slang::Nodes::Element, 5, 3, nil, 1},
+        {Slang::Nodes::Element, 5, 3, "baz", 1},
         {Slang::Nodes::Text, 9, 3, "i", 0},
-        {Slang::Nodes::Element, 1, 4, nil, 0}
+        {Slang::Nodes::Element, 1, 4, "div", 0}
       ])
     end
   end
@@ -173,11 +173,11 @@ describe Slang::Parser do
     it "parses the code block" do
       parser.document.expansion.should eq([
         {Slang::Document, 1, 0, nil, 2},
-        {Slang::Nodes::Element, 1, 1, nil, 1},
+        {Slang::Nodes::Element, 1, 1, "div", 1},
         {Slang::Nodes::Control, 5, 1, "foo_bar do |i|", 1},
-        {Slang::Nodes::Element, 3, 2, nil, 1},
+        {Slang::Nodes::Element, 3, 2, "baz", 1},
         {Slang::Nodes::Text, 7, 2, "i", 0},
-        {Slang::Nodes::Element, 1, 3, nil, 0}
+        {Slang::Nodes::Element, 1, 3, "div", 0}
       ])
     end
   end
@@ -189,10 +189,10 @@ describe Slang::Parser do
     it "parses the code block" do
       parser.document.expansion.should eq([
         {Slang::Document, 1, 0, nil, 2},
-        {Slang::Nodes::Element, 1, 1, nil, 1},
+        {Slang::Nodes::Element, 1, 1, "div", 1},
         {Slang::Nodes::Text, 3, 2, "foo_bar do", 1},
-        {Slang::Nodes::Element, 5, 3, nil, 0},
-        {Slang::Nodes::Element, 1, 4, nil, 0}
+        {Slang::Nodes::Element, 5, 3, "baz", 0},
+        {Slang::Nodes::Element, 1, 4, "div", 0}
       ])
     end
   end
@@ -204,10 +204,10 @@ describe Slang::Parser do
     it "parses the code block" do
       parser.document.expansion.should eq([
         {Slang::Document, 1, 0, nil, 2},
-        {Slang::Nodes::Element, 1, 1, nil, 1},
+        {Slang::Nodes::Element, 1, 1, "div", 1},
         {Slang::Nodes::Text, 5, 1, "foo_bar do", 1},
-        {Slang::Nodes::Element, 3, 2, nil, 0},
-        {Slang::Nodes::Element, 1, 3, nil, 0}
+        {Slang::Nodes::Element, 3, 2, "baz", 0},
+        {Slang::Nodes::Element, 1, 3, "div", 0}
       ])
     end
   end
@@ -219,8 +219,8 @@ describe Slang::Parser do
     it "parses the code block" do
       parser.document.expansion.should eq([
         {Slang::Document, 1, 0, nil, 2},
-        {Slang::Nodes::Element, 1, 1, nil, 0},
-        {Slang::Nodes::Element, 1, 2, nil, 0}
+        {Slang::Nodes::Element, 1, 1, "div", 0},
+        {Slang::Nodes::Element, 1, 2, "div", 0}
       ])
     end
   end
@@ -232,7 +232,7 @@ describe Slang::Parser do
     it "parses the element with attributes" do
       parser.document.expansion.should eq([
         {Slang::Document, 1, 0, nil, 1},
-        {Slang::Nodes::Element, 1, 1, nil, 3},
+        {Slang::Nodes::Element, 1, 1, "div", 3},
         {Slang::Nodes::Attribute, 5, 1, %["foo"], 0},
         {Slang::Nodes::Attribute, 17, 1, %[bar], 0},
         {Slang::Nodes::Attribute, 24, 1, %[baz], 0}
@@ -270,7 +270,7 @@ describe Slang::Parser do
     it "parses the element with attributes" do
       parser.document.expansion.should eq([
         {Slang::Document, 1, 0, nil, 1},
-        {Slang::Nodes::Element, 1, 1, nil, 3},
+        {Slang::Nodes::Element, 1, 1, "span", 3},
         {Slang::Nodes::Attribute, 1, 1, %["foo"], 0}, # FIXME: This should be 5
         {Slang::Nodes::Attribute, 1, 1, %["bar"], 0}, # FIXME: This should be 9
         {Slang::Nodes::Attribute, 14, 1, %[baz], 0}
