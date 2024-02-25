@@ -14,6 +14,7 @@ module Slang
     # The token is the first line of a block of verbatim text.
     property :text_block
 
+    @name : String?
     @value : String?
     @id : String?
 
@@ -21,7 +22,6 @@ module Slang
       @type = :EOF
       @line_number = 0
       @column_number = 0
-      @name = "div"
       @attributes = {} of String => (String | Set(String))
       @escaped = true
       @inline = false

@@ -121,6 +121,7 @@ module Slang
 
     private def consume_element
       @token.type = :ELEMENT
+      @token.name = "div"
 
       loop do
         case current_char
@@ -158,6 +159,7 @@ module Slang
         @token.value = consume_line
       elsif @token.name == "*code*"
         @token.type = :CODE
+        @token.name = nil
         consume_line
       end
     end
