@@ -98,6 +98,13 @@ alert("8 * 3 + 8 * 4 = " + (num1 + num2));\
       HTML
     end
 
+    it "evaluates expressions once" do
+      klass = type = ""
+      render(%{span class="\#{klass += "foo"}" type="\#{type += "bar"}"}).should eq <<-HTML
+      <span class="foo" type="bar"></span>
+      HTML
+    end
+
     it "joins class attributes" do
       render(%{span.foo class="bar"}).should eq <<-HTML
       <span class="foo bar"></span>
