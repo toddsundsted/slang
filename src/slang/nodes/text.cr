@@ -3,10 +3,6 @@ require "random/secure"
 module Slang
   module Nodes
     class Text < Node
-      def allow_children_to_escape?
-        parent.allow_children_to_escape? && !text_block
-      end
-
       def first_child?
         parent.nodes.first == self && (parent.is_a?(Element) || parent.is_a?(Document))
       end
@@ -17,12 +13,12 @@ module Slang
 
       def to_s(str, buffer_name)
         str << "#{buffer_name} << \" \"\n" if prepend_whitespace
-        str << "#{buffer_name} << \"\n\"\n" if raw_text && !first_child? && !text_block && !empty_parent?
+        str << "#{buffer_name} << \"\n\"\n" if raw_text && !first_child? && !text_block && !empty_parent? && !inline
         str << "#{buffer_name} << \"#{indentation}\"\n" if indent? && raw_text
         str << "#{buffer_name} << "
 
         # Escaping.
-        if escaped && parent.allow_children_to_escape?
+        if escaped
           str << "::HTML.escape("
         end
 
@@ -39,7 +35,7 @@ module Slang
         end
 
         # escaping, need to close HTML.escape
-        if escaped && parent.allow_children_to_escape?
+        if escaped
           str << ".to_s)"
         end
         str << ".to_s(#{buffer_name})\n"

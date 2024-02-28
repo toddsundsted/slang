@@ -4,7 +4,7 @@ html
     meta name="viewport" content="width=device-width,initial-scale=1.0"
     title This is a title
     css:
-      h1 {color: red;} 
+      h1 {color: red;}
       p {color: green;}
     style h2 {color: blue;}
   body

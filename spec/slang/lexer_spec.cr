@@ -170,6 +170,152 @@ describe Slang::Lexer do
     end
   end
 
+  describe "html tags with text" do
+    string = %[div #foo .bar]
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line" do
+      it "is a div element" do
+        token = lexer.next_token
+
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("div")
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+      end
+    end
+
+    describe "first line, second token" do
+      it "is text" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq(%["#foo .bar"])
+        token.column_number.should eq(5)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+      end
+    end
+  end
+
+  describe "html tags with interpolation" do
+    string = %[div foo \#{bar} baz]
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line, first token" do
+      it "is a div element" do
+        token = lexer.next_token
+
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("div")
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_false
+      end
+    end
+
+    describe "first line, second token" do
+      it "is text" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq(%["foo "])
+        token.column_number.should eq(5)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_true
+      end
+    end
+
+    describe "first line, third token" do
+      it "is text" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq("bar")
+        token.column_number.should eq(9)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_true
+        token.inline.should be_true
+      end
+    end
+
+    describe "first line, fourth token" do
+      it "is text" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq(%[" baz"])
+        token.column_number.should eq(15)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_true
+      end
+    end
+  end
+
+  describe "html attributes with interpolation" do
+    string = %[div title="\#{foo}" bar]
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line, first token" do
+      it "is a div element" do
+        token = lexer.next_token
+
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("div")
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+      end
+    end
+
+    describe "first line, second token" do
+      it "is a title attribute" do
+        token = lexer.next_token
+
+        token.type.should eq(:ATTRIBUTE)
+        token.name.should eq("title")
+        token.value.should eq(%["\#{foo}"])
+        token.column_number.should eq(5)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_true
+      end
+    end
+
+    describe "first line, third token" do
+      it "is text" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq(%["bar"])
+        token.column_number.should eq(20)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+      end
+    end
+  end
+
   describe "shortcuts with implicit tags" do
     string = %[#foo.bar]
     lexer = Slang::Lexer.new(string)
@@ -374,6 +520,56 @@ describe Slang::Lexer do
           token.append_whitespace.should be_false
           token.text_block.should be_false
           token.raw_text.should be_true
+        end
+      end
+    end
+
+    context "with interpolation" do
+      string = %[| foo \#{bar} baz]
+      lexer = Slang::Lexer.new(string)
+
+      describe "first line, first token" do
+        it "is a text element" do
+          token = lexer.next_token
+
+          token.type.should eq(:TEXT)
+          token.value.should eq(%["foo "])
+          token.column_number.should eq(1)
+          token.line_number.should eq(1)
+          token.text_block.should be_true
+          token.raw_text.should be_true
+          token.escaped.should be_false
+          token.inline.should be_false
+        end
+      end
+
+      describe "first line, second token" do
+        it "is a text element" do
+          token = lexer.next_token
+
+          token.type.should eq(:TEXT)
+          token.value.should eq("bar")
+          token.column_number.should eq(7)
+          token.line_number.should eq(1)
+          token.text_block.should be_false
+          token.raw_text.should be_true
+          token.escaped.should be_true
+          token.inline.should be_true
+        end
+      end
+
+      describe "first line, third token" do
+        it "is a text element" do
+          token = lexer.next_token
+
+          token.type.should eq(:TEXT)
+          token.value.should eq(%[" baz"])
+          token.column_number.should eq(13)
+          token.line_number.should eq(1)
+          token.text_block.should be_false
+          token.raw_text.should be_true
+          token.escaped.should be_false
+          token.inline.should be_true
         end
       end
     end

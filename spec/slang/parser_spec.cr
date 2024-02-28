@@ -312,4 +312,56 @@ describe Slang::Parser do
       BLOCK
     end
   end
+
+  describe "interpolation" do
+    context "tag with interpolation" do
+      string = %[div foo \#{bar} baz]
+      parser = Slang::Parser.new(string)
+
+      it "parses the tag with interpolation" do
+        parser.document.expansion.should eq([
+          {Slang::Document, 1, 0, nil, 1},
+          {Slang::Nodes::Element, 1, 1, "div", 1},
+          {Slang::Nodes::Text, 5, 1, %["foo "], 1},
+          {Slang::Nodes::Text, 9, 1, "bar", 1},
+          {Slang::Nodes::Text, 15, 1, %[" baz"], 0}
+        ])
+      end
+
+      it "renders the template code" do
+        parser.parse.should eq <<-BLOCK
+        __slang__ << "<div"
+        __slang__ << ">"
+        __slang__ << ("foo ").to_s(__slang__)
+        __slang__ << ::HTML.escape((bar).to_s).to_s(__slang__)
+        __slang__ << (" baz").to_s(__slang__)
+        __slang__ << "</div>"
+
+        BLOCK
+      end
+    end
+
+    context "text with interpolation" do
+      string = %[| foo \#{bar} baz]
+      parser = Slang::Parser.new(string)
+
+      it "parses the text with interpolation" do
+        parser.document.expansion.should eq([
+          {Slang::Document, 1, 0, nil, 1},
+          {Slang::Nodes::Text, 1, 1, %["foo "], 1},
+          {Slang::Nodes::Text, 7, 1, "bar", 1},
+          {Slang::Nodes::Text, 13, 1, %[" baz"], 0}
+        ])
+      end
+
+      it "renders the template code" do
+        parser.parse.should eq <<-BLOCK
+        __slang__ << ("foo ").to_s(__slang__)
+        __slang__ << ::HTML.escape((bar).to_s).to_s(__slang__)
+        __slang__ << (" baz").to_s(__slang__)
+
+        BLOCK
+      end
+    end
+  end
 end
