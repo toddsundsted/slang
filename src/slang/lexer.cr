@@ -305,14 +305,14 @@ module Slang
             cc = STRING_OPEN_CLOSE_CHARS_MAP[current_char]
             str << current_char
             next_char
-            str << consume_string open_char: oc, close_char: cc
+            str << consume_string open_char: oc, close_char: cc, break_on_interpolation: false
             next
           end
           if current_char == '"' || current_char == '\''
             ch = current_char
             str << current_char
             next_char
-            str << consume_string open_char: ch, close_char: ch
+            str << consume_string open_char: ch, close_char: ch, break_on_interpolation: false
             next
           end
           if current_char == '}'
@@ -349,7 +349,7 @@ module Slang
               break
             end
 
-            if current_char == open_char && !escaped
+            if current_char == open_char && !escaped && !maybe_string_interpolation
               level += 1
             end
             if current_char == close_char && !escaped

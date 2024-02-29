@@ -573,6 +573,41 @@ describe Slang::Lexer do
         end
       end
     end
+
+    context "with interpolation" do
+      string = %q[| #{%{"hello #{"world"}"}}]
+      lexer = Slang::Lexer.new(string)
+
+      describe "first line, first token" do
+        it "is a text element" do
+          token = lexer.next_token
+
+          token.type.should eq(:TEXT)
+          token.value.should eq(%[""])
+          token.column_number.should eq(1)
+          token.line_number.should eq(1)
+          token.text_block.should be_true
+          token.raw_text.should be_true
+          token.escaped.should be_false
+          token.inline.should be_false
+        end
+      end
+
+      describe "first line, second token" do
+        it "is a text element" do
+          token = lexer.next_token
+
+          token.type.should eq(:TEXT)
+          token.value.should eq(%q[%{"hello #{"world"}"}])
+          token.column_number.should eq(3)
+          token.line_number.should eq(1)
+          token.text_block.should be_false
+          token.raw_text.should be_true
+          token.escaped.should be_true
+          token.inline.should be_true
+        end
+      end
+    end
   end
 
   describe "code blocks" do
