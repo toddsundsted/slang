@@ -611,11 +611,11 @@ describe Slang::Lexer do
   end
 
   describe "code blocks" do
-    string = %[crystal:\n  def foo\n    "foo"\n  end]
+    string = %[crystal:\n  def foo\n    "\#{bar}"\n    "baz"\n  end]
     lexer = Slang::Lexer.new(string)
 
     describe "first line" do
-      it "is a text element" do
+      it "is a code element" do
         token = lexer.next_token
 
         token.type.should eq(:CODE)
@@ -624,6 +624,8 @@ describe Slang::Lexer do
         token.line_number.should eq(1)
         token.text_block.should be_false
         token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -632,11 +634,13 @@ describe Slang::Lexer do
         token = lexer.next_token
 
         token.type.should eq(:TEXT)
-        token.value.should eq(%["def foo"])
+        token.value.should eq(%[def foo])
         token.column_number.should eq(3)
         token.line_number.should eq(2)
         token.text_block.should be_false
         token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -645,11 +649,13 @@ describe Slang::Lexer do
         token = lexer.next_token
 
         token.type.should eq(:TEXT)
-        token.value.should eq(%["\\\"foo\\\""])
+        token.value.should eq(%["\#{bar}"])
         token.column_number.should eq(5)
         token.line_number.should eq(3)
         token.text_block.should be_false
         token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -658,11 +664,28 @@ describe Slang::Lexer do
         token = lexer.next_token
 
         token.type.should eq(:TEXT)
-        token.value.should eq(%["end"])
-        token.column_number.should eq(3)
+        token.value.should eq(%["baz"])
+        token.column_number.should eq(5)
         token.line_number.should eq(4)
         token.text_block.should be_false
         token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
+      end
+    end
+
+    describe "fifth line" do
+      it "is a text element" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq(%[end])
+        token.column_number.should eq(3)
+        token.line_number.should eq(5)
+        token.text_block.should be_false
+        token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
   end

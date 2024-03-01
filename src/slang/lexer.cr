@@ -22,6 +22,7 @@ module Slang
       @reader = Char::Reader.new(string)
       @token = Token.new
       @parsing_text = false
+      @code_block_column_number = 0
       @line_number = 1
       @column_number = 1
       @last_token = @token
@@ -50,6 +51,30 @@ module Slang
       end
 
       inline = @raw_text_column > 0 || (@last_token.type.in?([:ELEMENT, :ATTRIBUTE, :TEXT]) && @last_token.line_number == @line_number)
+
+      if @code_block_column_number >= @column_number
+        @code_block_column_number = 0
+      end
+
+      if @code_block_column_number > 0
+        case current_char
+        when '\0'
+          @token.type = :EOF
+        when '\r'
+          raise "slang expected '\\n' after '\\r'" unless next_char == '\n' # peek_next_char???
+          consume_newline
+        when '\n'
+          consume_newline
+        else
+          @token.type = :TEXT
+          @token.value = consume_line
+          @token.raw_text = true
+          @token.escaped = false
+          text = @token.value || ""
+          @raw_text_column = (@column_number - text.size)
+        end
+        return
+      end
 
       case current_char
       when '\0'
@@ -167,12 +192,14 @@ module Slang
     end
 
     private def consume_element_name
+      column_number = @column_number
       @token.name = check_raw_text_header(consume_html_valid_name)
       if @token.name == "doctype"
         @token.type = :DOCTYPE
         next_char if current_char == ' '
         @token.value = consume_line
       elsif @token.name == "*code*"
+        @code_block_column_number = column_number
         @token.type = :CODE
         @token.name = nil
         consume_line
