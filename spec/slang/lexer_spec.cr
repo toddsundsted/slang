@@ -717,6 +717,7 @@ describe Slang::Lexer do
         token.line_number.should eq(1)
         token.text_block.should be_false
         token.raw_text.should be_false
+        token.escaped.should be_false
       end
     end
   end
@@ -735,6 +736,7 @@ describe Slang::Lexer do
         token.line_number.should eq(1)
         token.text_block.should be_false
         token.raw_text.should be_false
+        token.escaped.should be_false
       end
     end
   end

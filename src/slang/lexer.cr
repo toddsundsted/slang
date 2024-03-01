@@ -115,6 +115,7 @@ module Slang
         @token.escaped = false
         consume_inline_element
       when '-'
+        @token.escaped = false
         consume_control
       when '='
         consume_output
