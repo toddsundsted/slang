@@ -15,6 +15,8 @@ describe Slang::Lexer do
         token.line_number.should eq(1)
         token.text_block.should be_false
         token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -28,6 +30,8 @@ describe Slang::Lexer do
         token.line_number.should eq(2)
         token.text_block.should be_false
         token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -41,6 +45,8 @@ describe Slang::Lexer do
         token.line_number.should eq(2)
         token.text_block.should be_false
         token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_true
       end
     end
   end
@@ -60,6 +66,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -75,6 +82,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_true
+        token.inline.should be_true
       end
     end
 
@@ -90,6 +98,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_true
+        token.inline.should be_true
       end
     end
   end
@@ -109,6 +118,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -124,6 +134,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_true
+        token.inline.should be_true
       end
     end
 
@@ -139,6 +150,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_true
+        token.inline.should be_true
       end
     end
   end
@@ -158,6 +170,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_false
+        token.inline.should be_false
       end
 
       it "has an id attribute" do
@@ -185,6 +198,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -199,6 +213,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_false
+        token.inline.should be_true
       end
     end
   end
@@ -283,6 +298,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -298,6 +314,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_true
+        token.inline.should be_true
       end
     end
 
@@ -312,6 +329,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_false
+        token.inline.should be_true
       end
     end
   end
@@ -331,6 +349,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_false
+        token.inline.should be_false
       end
 
       it "has an id attribute" do
@@ -357,6 +376,8 @@ describe Slang::Lexer do
         token.line_number.should eq(1)
         token.text_block.should be_false
         token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -370,6 +391,8 @@ describe Slang::Lexer do
         token.line_number.should eq(2)
         token.text_block.should be_false
         token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -383,6 +406,8 @@ describe Slang::Lexer do
         token.line_number.should eq(3)
         token.text_block.should be_false
         token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -396,6 +421,8 @@ describe Slang::Lexer do
         token.line_number.should eq(4)
         token.text_block.should be_false
         token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
   end
@@ -414,6 +441,8 @@ describe Slang::Lexer do
         token.line_number.should eq(1)
         token.text_block.should be_false
         token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -427,6 +456,8 @@ describe Slang::Lexer do
         token.line_number.should eq(2)
         token.text_block.should be_false
         token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -440,6 +471,8 @@ describe Slang::Lexer do
         token.line_number.should eq(3)
         token.text_block.should be_false
         token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -453,6 +486,8 @@ describe Slang::Lexer do
         token.line_number.should eq(4)
         token.text_block.should be_false
         token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
   end
@@ -473,6 +508,8 @@ describe Slang::Lexer do
           token.append_whitespace.should be_false
           token.text_block.should be_true
           token.raw_text.should be_true
+          token.escaped.should be_false
+          token.inline.should be_false
         end
       end
 
@@ -487,6 +524,8 @@ describe Slang::Lexer do
           token.append_whitespace.should be_false
           token.text_block.should be_false
           token.raw_text.should be_true
+          token.escaped.should be_false
+          token.inline.should be_false
         end
       end
     end
@@ -506,6 +545,8 @@ describe Slang::Lexer do
           token.append_whitespace.should be_true
           token.text_block.should be_true
           token.raw_text.should be_true
+          token.escaped.should be_false
+          token.inline.should be_false
         end
       end
 
@@ -520,6 +561,58 @@ describe Slang::Lexer do
           token.append_whitespace.should be_false
           token.text_block.should be_false
           token.raw_text.should be_true
+          token.escaped.should be_false
+          token.inline.should be_false
+        end
+      end
+    end
+
+    context "with html" do
+      string = %[<div>\n  <p>text</p>\n</div>]
+      lexer = Slang::Lexer.new(string)
+
+      describe "first line" do
+        it "is a text element" do
+          token = lexer.next_token
+
+          token.type.should eq(:TEXT)
+          token.value.should eq(%["<div>"])
+          token.column_number.should eq(1)
+          token.line_number.should eq(1)
+          token.text_block.should be_false
+          token.raw_text.should be_false
+          token.escaped.should be_false
+          token.inline.should be_false
+        end
+      end
+
+      describe "second line" do
+        it "is a text element" do
+          token = lexer.next_token
+
+          token.type.should eq(:TEXT)
+          token.value.should eq(%["<p>text</p>"])
+          token.column_number.should eq(3)
+          token.line_number.should eq(2)
+          token.text_block.should be_false
+          token.raw_text.should be_false
+          token.escaped.should be_false
+          token.inline.should be_false
+        end
+      end
+
+      describe "third line" do
+        it "is a text element" do
+          token = lexer.next_token
+
+          token.type.should eq(:TEXT)
+          token.value.should eq(%["</div>"])
+          token.column_number.should eq(1)
+          token.line_number.should eq(3)
+          token.text_block.should be_false
+          token.raw_text.should be_false
+          token.escaped.should be_false
+          token.inline.should be_false
         end
       end
     end
@@ -704,6 +797,8 @@ describe Slang::Lexer do
         token.line_number.should eq(1)
         token.text_block.should be_false
         token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_false
       end
     end
 
@@ -718,6 +813,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_false
+        token.inline.should be_true
       end
     end
   end
@@ -737,6 +833,7 @@ describe Slang::Lexer do
         token.text_block.should be_false
         token.raw_text.should be_false
         token.escaped.should be_false
+        token.inline.should be_false
       end
     end
   end
