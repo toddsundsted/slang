@@ -111,7 +111,6 @@ module Slang
           consume_element
         end
       when ':'
-        inline = false # don't consider this "inline" for output
         @token.escaped = false
         consume_inline_element
       when '-'

@@ -51,6 +51,106 @@ describe Slang::Lexer do
     end
   end
 
+  describe "inline html tags" do
+    string = %[span: a text]
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line, first token" do
+      it "is a p element" do
+        token = lexer.next_token
+
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("span")
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_false
+      end
+    end
+
+    describe "first line, second token" do
+      it "is a span element" do
+        token = lexer.next_token
+
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("a")
+        token.column_number.should eq(5)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_true
+      end
+    end
+
+    describe "first line, third token" do
+      it "is a text element" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq(%["text"])
+        token.column_number.should eq(9)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_true
+      end
+    end
+  end
+
+  describe "inline html tags" do
+    string = %[span: a\n  | text]
+    lexer = Slang::Lexer.new(string)
+
+    describe "first line, first token" do
+      it "is a p element" do
+        token = lexer.next_token
+
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("span")
+        token.column_number.should eq(1)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_false
+      end
+    end
+
+    describe "first line, second token" do
+      it "is a span element" do
+        token = lexer.next_token
+
+        token.type.should eq(:ELEMENT)
+        token.name.should eq("a")
+        token.column_number.should eq(5)
+        token.line_number.should eq(1)
+        token.text_block.should be_false
+        token.raw_text.should be_false
+        token.escaped.should be_false
+        token.inline.should be_true
+      end
+    end
+
+    describe "second line" do
+      it "is a text element" do
+        token = lexer.next_token
+
+        token.type.should eq(:TEXT)
+        token.value.should eq(%["text"])
+        token.column_number.should eq(3)
+        token.line_number.should eq(2)
+        token.text_block.should be_true
+        token.raw_text.should be_true
+        token.escaped.should be_false
+        token.inline.should be_false
+      end
+    end
+  end
+
   describe "html tags with attributes" do
     string = %[div class="foo" id=bar]
     lexer = Slang::Lexer.new(string)

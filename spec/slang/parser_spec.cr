@@ -313,6 +313,33 @@ describe Slang::Parser do
     end
   end
 
+  describe "inline tag" do
+    string = %[div: div\n  | foo]
+    parser = Slang::Parser.new(string)
+
+    it "parses the inline tag" do
+      parser.document.expansion.should eq([
+        {Slang::Document, 1, 0, nil, 1},
+        {Slang::Nodes::Element, 1, 1, "div", 1},
+        {Slang::Nodes::Element, 4, 1, "div", 1},
+        {Slang::Nodes::Text, 3, 2, %["foo"], 0}
+      ])
+    end
+
+    it "renders the template code" do
+      parser.parse.should eq <<-BLOCK
+      __slang__ << "<div"
+      __slang__ << ">"
+      __slang__ << "<div"
+      __slang__ << ">"
+      __slang__ << ("foo").to_s(__slang__)
+      __slang__ << "</div>"
+      __slang__ << "</div>"
+
+      BLOCK
+    end
+  end
+
   describe "interpolation" do
     context "tag with interpolation" do
       string = %[div foo \#{bar} baz]
