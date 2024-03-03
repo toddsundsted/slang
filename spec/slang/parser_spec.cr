@@ -246,13 +246,13 @@ describe Slang::Parser do
       ::HTML.escape((bar).to_s, __slang__)
       __slang__ << "\\\""
       __slang__ << " class=\\\""
-      ("foo").tap do |__value__|
+      ::Slang.let("foo") do |__value__|
       if __value__.to_s.presence
       ::HTML.escape(__value__.to_s, __slang__)
       end
       end
       __slang__ << "\\\""
-      (baz).tap do |__value__|
+      ::Slang.let(baz) do |__value__|
       unless __value__ == false
       __slang__ << " type"
       unless __value__ == true
@@ -290,13 +290,13 @@ describe Slang::Parser do
       (\"bar\").to_s(__slang__)
       __slang__ << "\\\""
       __slang__ << " class=\\\""
-      ("foo").tap do |__value__|
+      ::Slang.let("foo") do |__value__|
       if __value__.to_s.presence
       __value__.to_s(__slang__)
       end
       end
       __slang__ << "\\\""
-      (baz).tap do |__value__|
+      ::Slang.let(baz) do |__value__|
       unless __value__ == false
       __slang__ << " type"
       unless __value__ == true

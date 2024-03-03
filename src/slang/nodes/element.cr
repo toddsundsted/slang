@@ -29,7 +29,7 @@ module Slang
         unless (attributes = select_attributes.select(&.class?)).empty?
           str << "#{buffer_name} << \" class=\\\"\"\n"
           attributes.each_with_index do |attribute, i|
-            str << "(#{attribute.value}).tap do |__value__|\n"
+            str << "::Slang.let(#{attribute.value}) do |__value__|\n"
             str << "if __value__.to_s.presence\n"
             str << "#{buffer_name} << \" \"\n" if i > 0
             if attribute.escaped
@@ -45,7 +45,7 @@ module Slang
         select_attributes.reject(&.id_or_class?).each do |attribute|
           # remove the attribute if value evaluates to false
           # remove the value if value evaluates to true
-          str << "(#{attribute.value}).tap do |__value__|\n"
+          str << "::Slang.let(#{attribute.value}) do |__value__|\n"
           str << "unless __value__ == false\n"
           str << "#{buffer_name} << \" #{attribute.name}\"\n"
           str << "unless __value__ == true\n"
