@@ -16,7 +16,6 @@ module Slang
 
     @name : String?
     @value : String?
-    @id : String?
 
     def initialize
       @type = :EOF

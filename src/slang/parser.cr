@@ -42,8 +42,6 @@ module Slang
           node = case token.type
                  when :ELEMENT
                    Nodes::Element.new(parent, token)
-                 when :ATTRIBUTE
-                    Nodes::Attribute.new(parent, token)
                  when :COMMENT
                    Nodes::Comment.new(parent, token)
                  when :CONTROL

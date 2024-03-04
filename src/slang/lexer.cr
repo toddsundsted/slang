@@ -518,17 +518,8 @@ module Slang
       @reader.next_char
     end
 
-    private def next_char(token_type)
-      @token.type = token_type
-      next_char
-    end
-
     private def peek_next_char
       @reader.peek_next_char
-    end
-
-    private def current_pos
-      @reader.pos
     end
 
     private def current_char
