@@ -26,19 +26,18 @@ module Slang
           end
           parent.nodes << Nodes::Attribute.new(parent, token)
           next_token
-        when :ELEMENT, :TEXT, :COMMENT, :CONTROL, :CODE, :OUTPUT
+        when :ELEMENT, :COMMENT, :CONTROL, :CODE, :OUTPUT, :TEXT
           parent = @current_node
           # find the parent
           until parent.is_a?(Document)
             # column number is smaller than the node we're processing
             # therefore it is the parent
             break if parent.column_number < token.column_number
-            if parent.token.type.in?(:CONTROL, :OUTPUT, :ELEMENT) && parent.token.inline
+            if parent.token.type.in?(:ELEMENT, :CONTROL, :OUTPUT) && parent.token.inline
               break if parent.parent.column_number < token.column_number
             end
             parent = parent.parent
           end
-
           node = case token.type
                  when :ELEMENT
                    Nodes::Element.new(parent, token)
@@ -51,7 +50,6 @@ module Slang
                  else
                    Nodes::Text.new(parent, token)
                  end
-
           if node.is_a?(Nodes::Element)
             node.attributes.each do |name, values|
               if values.is_a?(String)

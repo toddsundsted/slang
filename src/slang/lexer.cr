@@ -52,7 +52,7 @@ module Slang
 
       inline = @raw_text_column > 0 || (@last_token.type.in?([:ELEMENT, :ATTRIBUTE, :TEXT]) && @last_token.line_number == @line_number)
 
-      if @code_block_column_number >= @column_number
+      if @column_number <= @code_block_column_number
         @code_block_column_number = 0
       end
 
