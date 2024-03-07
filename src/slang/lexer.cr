@@ -33,7 +33,7 @@ module Slang
     def next_token
       loop do
         next_token_internal
-        break unless @token.type == :NEWLINE
+        break unless @token.type == :NEWLINE || @token.type == :WRAPPER
       end
       @last_token = @token
       @token
@@ -132,12 +132,13 @@ module Slang
         consume_comment
       else
         if inline
+          # matching pairs of open/close chars should be ignored
           if current_char.in?(ATTR_OPEN_CLOSE_MAP.keys) && @last_token.type == :ELEMENT
-            @token.type = :NEWLINE
+            @token.type = :WRAPPER
             @last_delimiter = current_char
             next_char
           elsif current_char.in?(ATTR_OPEN_CLOSE_MAP.values) && @last_token.type == :ATTRIBUTE
-            @token.type = :NEWLINE
+            @token.type = :WRAPPER
             @last_delimiter = current_char
             next_char
           else
