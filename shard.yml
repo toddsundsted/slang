@@ -1,9 +1,9 @@
 name: slang
-version: 1.7.1
+version: 2.0.0
 
 authors:
-  - Jerome Gravel-Niquet <jeromegn@gmail.com>
+  - Todd Sundsted <todd@sundsted.com>
 
-crystal: ">= 0.25.0, < 2.0.0"
+crystal: ">= 1.0.0, < 2.0.0"
 
 license: MIT
