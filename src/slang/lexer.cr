@@ -61,7 +61,7 @@ module Slang
         when '\0'
           @token.type = :EOF
         when '\r'
-          raise "slang expected '\\n' after '\\r'" unless next_char == '\n' # peek_next_char???
+          raise "slang expected '\\n' after '\\r'" unless peek_next_char == '\n'
           consume_newline
         when '\n'
           consume_newline
@@ -80,7 +80,7 @@ module Slang
       when '\0'
         @token.type = :EOF
       when '\r'
-        raise "slang expected '\\n' after '\\r'" unless next_char == '\n'
+        raise "slang expected '\\n' after '\\r'" unless peek_next_char == '\n'
         consume_newline
       when '\n'
         consume_newline
