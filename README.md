@@ -2,11 +2,14 @@
 
 [![Build Status](https://github.com/toddsundsted/slang/actions/workflows/ci.yml/badge.svg)](https://github.com/toddsundsted/slang/actions)
 
-Lightweight, terse, templating language for Crystal. Now with more [Slim](https://github.com/slim-template/slim) compatibility.
+Lightweight, terse, templating language for Crystal.  Originally
+forked from [jeromegn/slang](https://github.com/jeromegn/slang).  Now
+with more [Slim](https://github.com/slim-template/slim) compatibility.
 
 ## Installation
 
-Add this to your application's `shard.yml`:
+To install the latest code, add this to your application's `shard.yml`,
+or pin it to a [released version](https://github.com/toddsundsted/slang/releases):
 
 ```yaml
 dependencies:
@@ -172,18 +175,6 @@ Compiles to HTML:
 </html>
 ```
 
-### Difference between single and double equals in Slang
-
-* `=` inserts HTML with escaped characters
-* `==` inserts HTML without escaping. It is needed when you have already rendered HTML and you need to insert it to your layout directly.
-
-## TODO
-
-- [x] Fix known limitations
-- [ ] More tests
-- [ ] Website
-- [ ] Documentation
-
 ## Contributing
 
 1. Fork it ( https://github.com/toddsundsted/slang/fork )
@@ -195,5 +186,6 @@ Compiles to HTML:
 ## Contributors
 
 - [jeromegn](https://github.com/jeromegn) Jerome Gravel-Niquet - creator, maintainer
+- [toddsundsted](https://github.com/toddsundsted) Todd Sundsted - maintainer of this fork
 - [kRaw1er](https://github.com/kRaw1er) Dmitry Neveshkin
 - [elorest](https://github.com/elorest) Isaac Sloan
